@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ProTech - Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="../assets/stylesheets/login.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body{
+            background-image: url(../assets/img/classe_enfant.jpg);
+        }
+    </style>
+
+</head>
+
+<body>
+<fieldset>
+    <header>
+        <p class="connexion"> Connexion </p>
+        <p> Professeur </p>
+    </header>
+    <form action="/login" method="post" name="login">
+        <div class="login-fields">
+            <div class="contain-field">
+                <label for="email" class="login-field-username form-label"> Nom d'utilisateur :</label>
+                <input type="text" placeholder="Username" name="email" id="email" class="input-field-login form-control" required>
+            </div>
+            <div class="contain-field">
+                <label for="password" class="login-field-password form-label" > Mot de passe :</label>
+                <input type="password" placeholder="Mot de passe" id="password" name="password" class="input-field-password form-control" required>
+                <a class="passwordForgot"> Mot de passe oublié ?</a>
+            </div>
+            <button type="submit" class="btn btn-primary login-button">
+                Se connecter
+            </button>
+            <a href="/inscription" class="toCenter"> Inscription </a>
+        </div>
+    </form>
+
+</fieldset>
+</body>
+
+<script>
+    const error = urlParams.get('error');
+    // const buttonSession = document.getElementById("newSession");
+    if (error === "true") {
+        console.log("Error while submitting")
+        // buttonSession.style.display = "block";
+    } else {
+        // buttonSession.style.display = "none";
+    }
+</script>
+</html>

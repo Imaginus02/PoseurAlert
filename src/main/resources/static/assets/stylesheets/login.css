@@ -1,0 +1,71 @@
+body{
+    margin:0;
+    padding: 0;
+    width:100%;
+    height:100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+fieldset{
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 1px 1px 1px 1px black;
+    width:30%;
+    min-width: 400px;
+    margin-left: auto;
+    margin-top: auto;
+    margin-right:20px ;
+    margin-bottom: auto;
+    height:80vh;
+}
+
+.InscriptionFieldset{
+    height:100vh;
+}
+
+.contain-field{
+    height:15vh;
+}
+
+.login-fields {
+    margin:auto;
+    display: flex;
+    flex-direction: column;
+    width:80%;
+    margin-top: 24px;
+}
+
+header{
+    width:80%;
+    margin:auto;
+    margin-top:24px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+header p{
+    margin:0;
+    font-family: 'Dancing Script',serif;
+}
+
+.connexion{
+    font-size: 32px;
+    font-weight: 600;
+}
+
+.passwordForgot{
+    color: grey;
+    cursor: pointer;
+    font-size: 14px;
+
+    display: flex;
+    justify-content: center;
+}
+
+.toCenter{
+    text-align: center;
+}
