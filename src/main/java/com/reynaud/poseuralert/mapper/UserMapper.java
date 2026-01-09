@@ -9,7 +9,12 @@ public class UserMapper {
         return new User(
                 user.getId(),
                 user.getEmail(),
-                user.getPassword()
+                user.getPassword(),
+                user.getCompanyName(),
+                user.getSector(),
+                user.getAddress(),
+                user.getPhoneNumber(),
+                user.getSiret()
         );
     }
 }

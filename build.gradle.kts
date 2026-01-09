@@ -1,7 +1,7 @@
 plugins {
 	java
-	id("org.springframework.boot") version "3.5.6"
-	id("io.spring.dependency-management") version "1.1.7"
+	id("org.springframework.boot") version "2.7.18"
+	id("io.spring.dependency-management") version "1.0.15.RELEASE"
 }
 
 group = "com.reynaud"
@@ -9,9 +9,8 @@ version = "0.0.1-SNAPSHOT"
 description = "Demo project for Spring Boot"
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 repositories {
@@ -27,7 +26,7 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	implementation("org.springframework.boot:spring-boot-starter-thymeleaf:3.0.4")
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 }
 
 tasks.withType<Test> {

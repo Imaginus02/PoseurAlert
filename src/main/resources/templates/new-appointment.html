@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>À POINT - Nouveau rendez-vous</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/assets/stylesheets/login.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+            <div class="card-header">
+                <h4 th:text="${sectorLabels.getNewAppointmentButtonLabel(user.sector)} + ' - ' + ${user.companyName}">Nouveau rendez-vous - Entreprise</h4>
+            </div>
+                <div class="card-body">
+                    <form action="/rendez-vous/nouveau" method="post">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="clientName" class="form-label" th:text="'Nom du ' + ${sectorLabels.getClientLabel(user.sector)} + ' *'">Nom du client *</label>
+                                <input type="text" class="form-control" id="clientName" name="clientName"
+                                       th:placeholder="'Nom et prénom du ' + ${sectorLabels.getClientLabel(user.sector)}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="clientPhone" class="form-label" th:text="'Téléphone du ' + ${sectorLabels.getClientLabel(user.sector)} + ' *'">Téléphone du client *</label>
+                                <input type="tel" class="form-control" id="clientPhone" name="clientPhone"
+                                       placeholder="01 23 45 67 89" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="appointmentDateTime" class="form-label" th:text="${sectorLabels.getAppointmentDateLabel(user.sector)} + ' *'">Date et heure du rendez-vous *</label>
+                            <input type="datetime-local" class="form-control" id="appointmentDateTime"
+                                   name="appointmentDateTime" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Notes (optionnel)</label>
+                            <textarea class="form-control" id="notes" name="notes" rows="3"
+                                      placeholder="Informations supplémentaires sur le rendez-vous"></textarea>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="/rendez-vous" class="btn btn-outline-secondary me-md-2">Annuler</a>
+                            <button type="submit" class="btn btn-primary">Créer le rendez-vous</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Avertissement HDS pour les professionnels de santé -->
+            <div th:if="${sectorLabels.requiresHDSCompliance(user.sector)}" class="alert alert-warning mt-3" role="alert">
+                <h6 class="alert-heading">📋 Conformité HDS</h6>
+                <p class="mb-0" th:text="${sectorLabels.getHDSWarning(user.sector)}"></p>
+            </div>
+
+            <div class="alert alert-info mt-3" role="alert">
+                <strong>À propos du système de signalement :</strong><br>
+                Si le numéro de téléphone saisi est associé à un client ayant déjà été signalé 2 fois ou plus pour des rendez-vous manqués, un avertissement s'affichera lors de la création.
+                Vous pourrez alors décider de confirmer ou annuler le rendez-vous.
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+// Définir la date minimale à aujourd'hui
+document.addEventListener('DOMContentLoaded', function() {
+    const dateInput = document.getElementById('appointmentDateTime');
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const minDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+    dateInput.min = minDateTime;
+});
+</script>
+</body>
+</html>
