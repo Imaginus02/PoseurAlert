@@ -12,22 +12,7 @@ public class ViewController {
 
     @GetMapping("/login")
     public String showLoginPage() {
-        System.out.println("=== SHOWING LOGIN PAGE ===");
-        // Check if CSRF is available in the request context
-        try {
-            org.springframework.security.web.csrf.CsrfToken csrfToken =
-                (org.springframework.security.web.csrf.CsrfToken)
-                org.springframework.web.context.request.RequestContextHolder
-                    .currentRequestAttributes()
-                    .getAttribute(org.springframework.security.web.csrf.CsrfToken.class.getName(), 0);
-            if (csrfToken != null) {
-                System.out.println("CSRF Token available: " + csrfToken.getToken().substring(0, 10) + "...");
-            } else {
-                System.out.println("CSRF Token NOT available!");
-            }
-        } catch (Exception e) {
-            System.out.println("Error checking CSRF: " + e.getMessage());
-        }
+        System.out.println("=== LOGIN PAGE REQUESTED ===");
         return "login"; // Returns login.html
     }
 
@@ -40,6 +25,7 @@ public class ViewController {
     @GetMapping("/")
     public String home(@AuthenticationPrincipal UserEntity user) {
         if (user != null) {
+            // Si l'utilisateur est connecté et arrive sur "/", le rediriger vers ses rendez-vous
             return "redirect:/rendez-vous";
         }
         return "index";

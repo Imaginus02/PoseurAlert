@@ -4,6 +4,7 @@ import com.reynaud.poseuralert.dao.AppointmentDao;
 import com.reynaud.poseuralert.dao.AuditLogDao;
 import com.reynaud.poseuralert.dao.ClientPhoneDao;
 import com.reynaud.poseuralert.dao.ReportDao;
+import com.reynaud.poseuralert.dao.UserDao;
 import com.reynaud.poseuralert.model.*;
 import com.reynaud.poseuralert.util.SectorLabels;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -22,15 +23,18 @@ import java.util.Optional;
 public class AppointmentController {
 
     private final AppointmentDao appointmentDao;
+    private final UserDao userDao;
     private final ClientPhoneDao clientPhoneDao;
     private final ReportDao reportDao;
     private final AuditLogDao auditLogDao;
 
     public AppointmentController(AppointmentDao appointmentDao,
+                               UserDao userDao,
                                ClientPhoneDao clientPhoneDao,
                                ReportDao reportDao,
                                AuditLogDao auditLogDao) {
         this.appointmentDao = appointmentDao;
+        this.userDao = userDao;
         this.clientPhoneDao = clientPhoneDao;
         this.reportDao = reportDao;
         this.auditLogDao = auditLogDao;
@@ -45,16 +49,35 @@ public class AppointmentController {
     }
 
     @GetMapping
-    public String listAppointments(@AuthenticationPrincipal UserEntity user, Model model) {
-        List<AppointmentEntity> appointments = appointmentDao.findByProfessional(user);
-        model.addAttribute("appointments", appointments);
-        model.addAttribute("user", user);
-        model.addAttribute("sectorLabels", new SectorLabels());
+    public String listAppointments(@AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails userDetails, Model model) {
+        try {
+            System.out.println("=== LISTING APPOINTMENTS FOR USER: " + userDetails.getUsername() + " ===");
 
-        // Audit pour les professionnels de santé
-        logAuditAction(user, "VIEW", "APPOINTMENTS", "LIST", "Consultation de la liste des rendez-vous");
+            // Récupérer l'UserEntity depuis la base de données en utilisant l'email
+            UserEntity user = userDao.findByEmail(userDetails.getUsername());
 
-        return "appointments";
+            if (user == null) {
+                System.err.println("ERROR: User not found in database for email: " + userDetails.getUsername());
+                return "redirect:/login";
+            }
+
+            List<AppointmentEntity> appointments = appointmentDao.findByProfessional(user);
+            System.out.println("Found " + appointments.size() + " appointments");
+
+            model.addAttribute("appointments", appointments);
+            model.addAttribute("user", user);
+            model.addAttribute("sectorLabels", new SectorLabels());
+
+            // Audit pour les professionnels de santé
+            logAuditAction(user, "VIEW", "APPOINTMENTS", "LIST", "Consultation de la liste des rendez-vous");
+
+            System.out.println("Returning appointments template");
+            return "appointments";
+        } catch (Exception e) {
+            System.err.println("ERROR in listAppointments: " + e.getMessage());
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @GetMapping("/nouveau")

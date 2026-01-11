@@ -22,8 +22,9 @@ public class JpaUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("=== JPA USER DETAILS SERVICE ===");
+        System.out.println("=== JPA USER DETAILS SERVICE CALLED ===");
         System.out.println("Looking for user: " + username);
+        System.out.println("Timestamp: " + System.currentTimeMillis());
 
         UserEntity userEntity = userDao.findByEmail(username);
 

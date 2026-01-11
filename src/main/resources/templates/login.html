@@ -24,13 +24,8 @@
     <header>
         <p class="connexion"> Connexion - À POINT </p>
     </header>
-    <form action="/login/processing" method="post" name="login">
+    <form action="/login/processing" method="post" name="login" onsubmit="console.log('Form submitted with email:', document.getElementById('email').value)">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-        <!-- Debug: Show CSRF token for troubleshooting -->
-        <div style="display: none;">
-            CSRF Parameter: <span th:text="${_csrf.parameterName}">N/A</span><br/>
-            CSRF Token: <span th:text="${_csrf.token}">N/A</span>
-        </div>
         <div class="login-fields">
             <div class="contain-field">
                 <label for="email" class="login-field-username form-label"> Email :</label>
@@ -47,26 +42,23 @@
             <a href="/inscription" class="toCenter"> Inscription </a>
         </div>
     </form>
-
-    <!-- Test form for POST requests -->
-    <form action="/test-post" method="post" style="margin-top: 20px; padding: 10px; border: 1px solid red;">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-        <label>Test POST: </label>
-        <input type="text" name="test" value="test-value" />
-        <button type="submit">Test POST Request</button>
-    </form>
-
 </fieldset>
 </body>
 
 <script>
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
     const error = urlParams.get('error');
-    // const buttonSession = document.getElementById("newSession");
+
+    console.log("Login page loaded. URL params:", window.location.search);
+    console.log("Error parameter:", error);
+
     if (error === "true") {
-        console.log("Error while submitting")
-        // buttonSession.style.display = "block";
+        console.log("Login error detected - authentication failed");
+        // You could add visual feedback here, like showing an error message
+        alert("Erreur de connexion : email ou mot de passe incorrect");
     } else {
-        // buttonSession.style.display = "none";
+        console.log("No error parameter found - normal login page load");
     }
 </script>
 </html>
