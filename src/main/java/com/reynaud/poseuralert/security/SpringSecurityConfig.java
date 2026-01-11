@@ -1,5 +1,6 @@
 package com.reynaud.poseuralert.security;
 
+import com.reynaud.poseuralert.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,26 +33,29 @@ public class SpringSecurityConfig {// extends WebSecurityConfiguration {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        // We create a password encoder
+    public PasswordEncoder passwordEncoder() {
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-
-        manager.createUser(User.withUsername("user").password(encoder.encode("password")).roles(ROLE_USER).build());
-        manager.createUser(User.withUsername("admin").password(encoder.encode("admin")).roles(ROLE_ADMIN, ROLE_USER).build());
-        return manager;
+        System.out.println("=== PASSWORD ENCODER CONFIGURED ===");
+        System.out.println("PasswordEncoder class: " + encoder.getClass().getSimpleName());
+        return encoder;
     }
+
+    @Bean
+    public UserDetailsService userDetailsService(UserDao userDao, PasswordEncoder passwordEncoder) {
+        return new JpaUserDetailsService(userDao, passwordEncoder);
+    }
+
 
 
     @Bean
     @Order(2)
     public SecurityFilterChain basicFilterChain(HttpSecurity http) throws Exception {
         System.out.println("Building http");
+
         http.authorizeHttpRequests((requests) -> requests
                         .antMatchers("/login").permitAll()
                         .antMatchers("/login.html").permitAll()
                         .antMatchers("/login?error=true").permitAll()
-                        .antMatchers("/register").permitAll()
                         .antMatchers(HttpMethod.GET, "/api/**").hasRole(ROLE_ADMIN)
                         .antMatchers("/api/sessions/**").permitAll()
                         .antMatchers("/assets/**").permitAll()
@@ -60,11 +64,9 @@ public class SpringSecurityConfig {// extends WebSecurityConfiguration {
                         .antMatchers("/rendez-vous/**").authenticated()
                         .anyRequest().authenticated()
                 )
-                .csrf(AbstractHttpConfigurer::disable)
-                .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
-                        .defaultSuccessUrl("/mainPage.html?prof=true", true)
+                        .defaultSuccessUrl("/", true)
                         .loginProcessingUrl("/login/processing")
                         .permitAll()
                         .passwordParameter("password")
@@ -74,7 +76,8 @@ public class SpringSecurityConfig {// extends WebSecurityConfiguration {
                 .logout(withDefaults())
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/login"))
-                );
+                )
+                .csrf();
         return http.build();
     }
 

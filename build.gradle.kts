@@ -32,3 +32,31 @@ dependencies {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+// Tâche pour exécuter seulement les tests qui fonctionnent
+tasks.register<Test>("testWorking") {
+	useJUnitPlatform {
+		exclude("**/AppointmentControllerTest", "**/LoginControllerTest", "**/ViewControllerTest", "**/CompleteWorkflowTest")
+	}
+}
+
+// Tâche pour les tests DAO seulement
+tasks.register<Test>("testDao") {
+	useJUnitPlatform {
+		include("**/UserDaoTest", "**/AppointmentDaoTest", "**/ReportingDaoTest", "**/AuditLogDaoTest")
+	}
+}
+
+// Tâche pour les tests d'inscription seulement
+tasks.register<Test>("testRegistration") {
+	useJUnitPlatform {
+		include("**/UserRegistrationTest")
+	}
+}
+
+// Tâche pour les tests utilitaires seulement
+tasks.register<Test>("testUtils") {
+	useJUnitPlatform {
+		include("**/SectorLabelsTest")
+	}
+}
