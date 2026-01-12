@@ -163,7 +163,7 @@
                             <pre th:if="${user.businessHours}" class="mb-0 small" th:text="${user.businessHours}"></pre>
 
                             <hr class="my-3">
-                            <a th:href="@{/profil/public/{companySlug}(companySlug=${#strings.toLowerCase(user.companyName.replaceAll('[^a-zA-Z0-9\\s]', '').replaceAll('\\s+', '-'))})}" target="_blank" class="btn btn-sm btn-outline-primary">
+                            <a th:href="@{/profil/public/{id}(id=${user.id})}" target="_blank" class="btn btn-sm btn-outline-primary">
                                 Voir le profil public
                             </a>
                         </div>

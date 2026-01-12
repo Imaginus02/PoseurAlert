@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 @CrossOrigin
 @Controller
@@ -29,20 +27,6 @@ public class ProfileController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    private String createCompanySlug(String companyName) {
-        if (companyName == null) return "";
-        // Remplacer les espaces par des tirets et supprimer les caractères spéciaux
-        return companyName.trim()
-                .replaceAll("[^a-zA-Z0-9\\s]", "") // Supprimer les caractères spéciaux
-                .replaceAll("\\s+", "-") // Remplacer les espaces par des tirets
-                .toLowerCase();
-    }
-
-    private String slugToCompanyName(String slug) {
-        if (slug == null) return "";
-        // Convertir les tirets en espaces et mettre en forme normale
-        return slug.replaceAll("-", " ").trim();
-    }
 
     @GetMapping
     public String showProfilePage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
@@ -131,22 +115,16 @@ public class ProfileController {
         }
     }
 
-    @GetMapping("/public/{companySlug}")
-    public String showPublicProfile(@PathVariable String companySlug, Model model) {
+    @GetMapping("/public/{id}")
+    public String showPublicProfile(@PathVariable Long id, Model model) {
         System.out.println("=== PUBLIC PROFILE REQUESTED ===");
 
-        // Essayer d'abord avec le slug tel quel
-        UserEntity user = userDao.findByCompanyName(companySlug);
-        if (user == null) {
-            // Si pas trouvé, essayer de convertir le slug en nom d'entreprise
-            String companyName = slugToCompanyName(companySlug);
-            user = userDao.findByCompanyName(companyName);
-        }
-
-        if (user == null || !Boolean.TRUE.equals(user.getIsPublicProfile())) {
+        Optional<UserEntity> userOptional = userDao.findById(id);
+        if (!userOptional.isPresent() || !Boolean.TRUE.equals(userOptional.get().getIsPublicProfile())) {
             return "redirect:/login?error=profile_not_found";
         }
 
+        UserEntity user = userOptional.get();
         model.addAttribute("company", user);
         return "public-profile";
     }
