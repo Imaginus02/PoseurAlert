@@ -1,9 +1,366 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{fragments/layout}">
-
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Inscription</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>À POINT - Inscription</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #64748b;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --danger-color: #dc2626;
+            --light-bg: #f8fafc;
+            --white: #ffffff;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-600: #475569;
+            --gray-800: #1e293b;
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--gray-800);
+            line-height: 1.6;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            box-shadow: var(--shadow);
+            padding: 0.75rem 0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--white) !important;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .navbar-brand:hover {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        .navbar-nav .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: var(--white) !important;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 0.375rem;
+        }
+
+        .btn-outline-light {
+            border-color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .btn-outline-light:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: var(--white);
+            color: var(--white);
+        }
+
+        /* Main content */
+        .main-content {
+            min-height: calc(100vh - 76px);
+            padding: 2rem 0;
+        }
+
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            background-color: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            border-radius: 0.75rem 0.75rem 0 0 !important;
+            padding: 1.5rem;
+        }
+
+        .card-header h5 {
+            color: var(--gray-800);
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            border-radius: 0.5rem;
+            font-weight: 500;
+            padding: 0.625rem 1.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+        }
+
+        .btn-success:hover {
+            background-color: #047857;
+            border-color: #047857;
+            transform: translateY(-1px);
+        }
+
+        /* Form elements */
+        .form-control {
+            border-radius: 0.5rem;
+            border: 2px solid var(--gray-200);
+            padding: 0.75rem;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--success-color);
+            box-shadow: 0 0 0 0.2rem rgba(5, 150, 105, 0.25);
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Register specific styles */
+        .register-container {
+            min-height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+
+        .register-card {
+            max-width: 500px;
+            width: 100%;
+            background: var(--white);
+            border-radius: 1rem;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .register-header {
+            background: linear-gradient(135deg, var(--success-color), #047857);
+            color: var(--white);
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+
+        .register-header h2 {
+            margin: 0;
+            font-size: 1.75rem;
+            font-weight: 600;
+        }
+
+        .register-header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .register-body {
+            padding: 2rem 1.5rem;
+        }
+
+        .register-links {
+            text-align: center;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .register-links a {
+            color: var(--success-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .register-links a:hover {
+            text-decoration: underline;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--gray-200);
+            color: var(--gray-600);
+            font-weight: 600;
+            margin: 0 0.25rem;
+        }
+
+        .step.active {
+            background-color: var(--success-color);
+            color: var(--white);
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section h4 {
+            color: var(--gray-800);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-section h4 i {
+            margin-right: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .password-strength {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .password-strength.weak {
+            color: var(--danger-color);
+        }
+
+        .password-strength.medium {
+            color: var(--warning-color);
+        }
+
+        .password-strength.strong {
+            color: var(--success-color);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--gray-100);
+            padding: 2rem 0;
+            margin-top: 3rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .footer p {
+            color: var(--gray-600);
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar-brand {
+                font-size: 1.25rem;
+            }
+
+            .main-content {
+                padding: 1rem 0;
+            }
+
+            .card-body {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/" th:href="@{/}">
+                <i class="bi bi-calendar-check"></i>
+                À POINT
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/rendez-vous" th:href="@{/rendez-vous}">
+                            <i class="bi bi-calendar-event"></i> Mes rendez-vous
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/profil" th:href="@{/profil}">
+                            <i class="bi bi-person-circle"></i> Mon profil
+                        </a>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav">
+                    <li class="nav-item" sec:authorize="!isAuthenticated()">
+                        <a class="nav-link" href="/login" th:href="@{/login}">
+                            <i class="bi bi-box-arrow-in-right"></i> Connexion
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="!isAuthenticated()">
+                        <a class="nav-link active" href="/inscription" th:href="@{/inscription}">
+                            <i class="bi bi-person-plus"></i> Inscription
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/logout" th:href="@{/logout}">
+                            <i class="bi bi-box-arrow-right"></i> Déconnexion
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
     <style>
         .register-container {
             min-height: 70vh;
@@ -268,74 +625,103 @@
             </div>
         </div>
 
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const password = document.getElementById('password');
-                const confirmPassword = document.getElementById('passwordConfirm');
-                const passwordStrength = document.getElementById('passwordStrength');
-                const strengthText = document.getElementById('strengthText');
-                const passwordMatch = document.getElementById('passwordMatch');
-                const submitBtn = document.getElementById('submitBtn');
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const password = document.getElementById('password');
+                    const confirmPassword = document.getElementById('passwordConfirm');
+                    const passwordStrength = document.getElementById('passwordStrength');
+                    const strengthText = document.getElementById('strengthText');
+                    const passwordMatch = document.getElementById('passwordMatch');
+                    const submitBtn = document.getElementById('submitBtn');
 
-                // Vérification de la force du mot de passe
-                password.addEventListener('input', function() {
-                    const value = this.value;
-                    if (value.length === 0) {
-                        passwordStrength.style.display = 'none';
-                        return;
+                    // Vérification de la force du mot de passe
+                    password.addEventListener('input', function() {
+                        const value = this.value;
+                        if (value.length === 0) {
+                            passwordStrength.style.display = 'none';
+                            return;
+                        }
+
+                        passwordStrength.style.display = 'block';
+                        let strength = 0;
+
+                        // Critères de force
+                        if (value.length >= 8) strength++;
+                        if (/[a-z]/.test(value)) strength++;
+                        if (/[A-Z]/.test(value)) strength++;
+                        if (/[0-9]/.test(value)) strength++;
+                        if (/[^A-Za-z0-9]/.test(value)) strength++;
+
+                        // Mise à jour de l'affichage
+                        passwordStrength.className = 'password-strength';
+                        if (strength < 3) {
+                            passwordStrength.classList.add('weak');
+                            strengthText.textContent = 'Faible';
+                        } else if (strength < 4) {
+                            passwordStrength.classList.add('medium');
+                            strengthText.textContent = 'Moyen';
+                        } else {
+                            passwordStrength.classList.add('strong');
+                            strengthText.textContent = 'Fort';
+                        }
+                    });
+
+                    // Vérification de la correspondance des mots de passe
+                    function checkPasswordMatch() {
+                        const passwordVal = password.value;
+                        const confirmVal = confirmPassword.value;
+
+                        if (confirmVal.length === 0) {
+                            passwordMatch.style.display = 'none';
+                            return;
+                        }
+
+                        if (passwordVal !== confirmVal) {
+                            passwordMatch.style.display = 'block';
+                            submitBtn.disabled = true;
+                        } else {
+                            passwordMatch.style.display = 'none';
+                            submitBtn.disabled = false;
+                        }
                     }
 
-                    passwordStrength.style.display = 'block';
-                    let strength = 0;
+                    confirmPassword.addEventListener('input', checkPasswordMatch);
+                    password.addEventListener('input', checkPasswordMatch);
 
-                    // Critères de force
-                    if (value.length >= 8) strength++;
-                    if (/[a-z]/.test(value)) strength++;
-                    if (/[A-Z]/.test(value)) strength++;
-                    if (/[0-9]/.test(value)) strength++;
-                    if (/[^A-Za-z0-9]/.test(value)) strength++;
-
-                    // Mise à jour de l'affichage
-                    passwordStrength.className = 'password-strength';
-                    if (strength < 3) {
-                        passwordStrength.classList.add('weak');
-                        strengthText.textContent = 'Faible';
-                    } else if (strength < 4) {
-                        passwordStrength.classList.add('medium');
-                        strengthText.textContent = 'Moyen';
-                    } else {
-                        passwordStrength.classList.add('strong');
-                        strengthText.textContent = 'Fort';
-                    }
+                    // Auto-focus
+                    document.getElementById('companyName').focus();
                 });
+            </script>
+        </div>
+    </main>
 
-                // Vérification de la correspondance des mots de passe
-                function checkPasswordMatch() {
-                    const passwordVal = password.value;
-                    const confirmVal = confirmPassword.value;
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container text-center">
+            <p>
+                <i class="bi bi-calendar-check me-1"></i>
+                À POINT - Gestion de rendez-vous professionnelle
+            </p>
+        </div>
+    </footer>
 
-                    if (confirmVal.length === 0) {
-                        passwordMatch.style.display = 'none';
-                        return;
-                    }
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"></script>
 
-                    if (passwordVal !== confirmVal) {
-                        passwordMatch.style.display = 'block';
-                        submitBtn.disabled = true;
-                    } else {
-                        passwordMatch.style.display = 'none';
-                        submitBtn.disabled = false;
-                    }
-                }
-
-                confirmPassword.addEventListener('input', checkPasswordMatch);
-                password.addEventListener('input', checkPasswordMatch);
-
-                // Auto-focus
-                document.getElementById('companyName').focus();
+    <!-- Custom JS -->
+    <script>
+        // Auto-hide alerts after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }, 5000);
             });
-        </script>
-
-    </layout:layout>
+        });
+    </script>
 </body>
 </html>
