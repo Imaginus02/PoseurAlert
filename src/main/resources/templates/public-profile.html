@@ -116,7 +116,7 @@
                     </div>
                 </div>
 
-                <div th:if="${!company.phoneNumber && !company.address}" class="text-muted">
+                <div th:if="${company.phoneNumber == null and company.address == null}" class="text-muted">
                     <em>Aucune information de contact disponible pour le moment.</em>
                 </div>
             </div>

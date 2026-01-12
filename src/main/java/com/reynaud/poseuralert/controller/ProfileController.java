@@ -4,6 +4,7 @@ import com.reynaud.poseuralert.dao.UserDao;
 import com.reynaud.poseuralert.model.Sector;
 import com.reynaud.poseuralert.model.UserEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @CrossOrigin
 @Controller
@@ -26,9 +29,32 @@ public class ProfileController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    private String createCompanySlug(String companyName) {
+        if (companyName == null) return "";
+        // Remplacer les espaces par des tirets et supprimer les caractères spéciaux
+        return companyName.trim()
+                .replaceAll("[^a-zA-Z0-9\\s]", "") // Supprimer les caractères spéciaux
+                .replaceAll("\\s+", "-") // Remplacer les espaces par des tirets
+                .toLowerCase();
+    }
+
+    private String slugToCompanyName(String slug) {
+        if (slug == null) return "";
+        // Convertir les tirets en espaces et mettre en forme normale
+        return slug.replaceAll("-", " ").trim();
+    }
+
     @GetMapping
-    public String showProfilePage(@AuthenticationPrincipal UserEntity user, Model model) {
+    public String showProfilePage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         System.out.println("=== PROFILE PAGE REQUESTED ===");
+
+        // Récupérer l'UserEntity depuis la base de données
+        UserEntity user = userDao.findByEmail(userDetails.getUsername());
+        if (user == null) {
+            System.err.println("ERROR: User not found in database for email: " + userDetails.getUsername());
+            return "redirect:/login";
+        }
+
         model.addAttribute("user", user);
         model.addAttribute("sectors", Sector.values());
         return "profile";
@@ -36,7 +62,7 @@ public class ProfileController {
 
     @PostMapping
     @Transactional
-    public String updateProfile(@AuthenticationPrincipal UserEntity user,
+    public String updateProfile(@AuthenticationPrincipal UserDetails userDetails,
                                @RequestParam String email,
                                @RequestParam(required = false) String currentPassword,
                                @RequestParam(required = false) String newPassword,
@@ -54,6 +80,12 @@ public class ProfileController {
         System.out.println("=== UPDATE PROFILE REQUESTED ===");
 
         try {
+            // Récupérer l'UserEntity depuis la base de données
+            UserEntity user = userDao.findByEmail(userDetails.getUsername());
+            if (user == null) {
+                System.err.println("ERROR: User not found in database for email: " + userDetails.getUsername());
+                return "redirect:/login";
+            }
             // Vérifier si l'email est déjà utilisé par un autre utilisateur
             UserEntity existingUser = userDao.findByEmail(email);
             if (existingUser != null && !existingUser.getId().equals(user.getId())) {
@@ -99,16 +131,15 @@ public class ProfileController {
         }
     }
 
-    @GetMapping("/public/{id}")
-    public String showPublicProfile(@PathVariable Long id, Model model) {
+    @GetMapping("/public/{companyName}")
+    public String showPublicProfile(@PathVariable String companyName, Model model) {
         System.out.println("=== PUBLIC PROFILE REQUESTED ===");
 
-        Optional<UserEntity> userOptional = userDao.findById(id);
-        if (!userOptional.isPresent() || !Boolean.TRUE.equals(userOptional.get().getIsPublicProfile())) {
+        UserEntity user = userDao.findByCompanyName(companyName);
+        if (user == null || !Boolean.TRUE.equals(user.getIsPublicProfile())) {
             return "redirect:/login?error=profile_not_found";
         }
 
-        UserEntity user = userOptional.get();
         model.addAttribute("company", user);
         return "public-profile";
     }
