@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>À POINT - Mon profil</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/assets/stylesheets/login.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Mon profil - <span th:text="${user.companyName}">Entreprise</span></h1>
+                <div>
+                    <a href="/rendez-vous" class="btn btn-outline-primary">Retour aux rendez-vous</a>
+                    <a href="/logout" class="btn btn-outline-secondary ms-2">Déconnexion</a>
+                </div>
+            </div>
+
+            <!-- Messages d'alerte -->
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <span th:text="${success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Informations du compte</h5>
+                        </div>
+                        <div class="card-body">
+                            <form action="/profil" method="post" name="profile">
+                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">Email *</label>
+                                        <input type="email" class="form-control" id="email" name="email"
+                                               th:value="${user.email}" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="companyName" class="form-label">Nom de l'entreprise *</label>
+                                        <input type="text" class="form-control" id="companyName" name="companyName"
+                                               th:value="${user.companyName}" required>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="sector" class="form-label">Secteur d'activité *</label>
+                                        <select class="form-control" id="sector" name="sector" required>
+                                            <option th:each="sectorOption : ${sectors}"
+                                                    th:value="${sectorOption.name()}"
+                                                    th:selected="${sectorOption == user.sector}"
+                                                    th:text="${sectorOption.getDisplayName()}">
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="siret" class="form-label">SIRET</label>
+                                        <input type="text" class="form-control" id="siret" name="siret"
+                                               th:value="${user.siret}">
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="address" class="form-label">Adresse</label>
+                                        <input type="text" class="form-control" id="address" name="address"
+                                               th:value="${user.address}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="phoneNumber" class="form-label">Téléphone</label>
+                                        <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber"
+                                               th:value="${user.phoneNumber}">
+                                    </div>
+                                </div>
+
+                                <hr class="my-4">
+                                <h6 class="mb-3">Changer le mot de passe</h6>
+                                <div class="row mb-3">
+                                    <div class="col-md-4">
+                                        <label for="currentPassword" class="form-label">Mot de passe actuel</label>
+                                        <input type="password" class="form-control" id="currentPassword" name="currentPassword">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="newPassword" class="form-label">Nouveau mot de passe</label>
+                                        <input type="password" class="form-control" id="newPassword" name="newPassword">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="confirmPassword" class="form-label">Confirmer le mot de passe</label>
+                                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword">
+                                    </div>
+                                </div>
+
+                                <hr class="my-4">
+                                <h6 class="mb-3">Profil public</h6>
+
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="isPublicProfile" name="isPublicProfile"
+                                               th:checked="${user.isPublicProfile}">
+                                        <label class="form-check-label" for="isPublicProfile">
+                                            Rendre mon profil visible publiquement
+                                        </label>
+                                    </div>
+                                    <div class="form-text">
+                                        Si activé, les clients pourront voir votre profil public avec vos informations et disponibilités.
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="description" class="form-label">Description de l'entreprise</label>
+                                    <textarea class="form-control" id="description" name="description" rows="4"
+                                              placeholder="Décrivez votre entreprise, vos services, votre approche..."></textarea>
+                                    <div class="form-text">
+                                        Cette description sera visible sur votre profil public.
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="businessHours" class="form-label">Horaires d'ouverture</label>
+                                    <textarea class="form-control" id="businessHours" name="businessHours" rows="3"
+                                              th:value="${user.businessHours}"
+                                              placeholder="Ex: Lundi-Vendredi: 9h-18h&#10;Samedi: 9h-12h&#10;Dimanche: Fermé"></textarea>
+                                    <div class="form-text">
+                                        Indiquez vos horaires d'ouverture. Ces informations seront visibles sur votre profil public.
+                                    </div>
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card" th:if="${user.isPublicProfile}">
+                        <div class="card-header">
+                            <h6 class="mb-0">Aperçu du profil public</h6>
+                        </div>
+                        <div class="card-body">
+                            <p class="mb-2"><strong>Nom:</strong> <span th:text="${user.companyName}"></span></p>
+                            <p class="mb-2" th:if="${user.phoneNumber}"><strong>Téléphone:</strong> <span th:text="${user.phoneNumber}"></span></p>
+                            <p class="mb-2" th:if="${user.address}"><strong>Adresse:</strong> <span th:text="${user.address}"></span></p>
+                            <p class="mb-2" th:if="${user.description}"><strong>Description:</strong> <span th:text="${user.description}"></span></p>
+                            <p class="mb-2" th:if="${user.businessHours}"><strong>Horaires:</strong></p>
+                            <pre th:if="${user.businessHours}" class="mb-0 small" th:text="${user.businessHours}"></pre>
+
+                            <hr class="my-3">
+                            <a th:href="@{/profil/public/{id}(id=${user.id})}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                Voir le profil public
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info mt-3" th:unless="${user.isPublicProfile}">
+                        <h6>A propos du profil public</h6>
+                        <p class="mb-0 small">
+                            Activez l'option "Rendre mon profil visible publiquement" pour permettre aux clients
+                            de consulter vos informations et vos disponibilités sans avoir à créer un compte.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+</html>

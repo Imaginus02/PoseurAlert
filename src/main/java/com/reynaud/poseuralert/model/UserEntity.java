@@ -40,6 +40,15 @@ public class UserEntity implements UserDetails {
     @Column(name = "siret")
     private String siret;
 
+    @Column(name = "description", length = 1000)
+    private String description;
+
+    @Column(name = "business_hours")
+    private String businessHours;
+
+    @Column(name = "is_public_profile")
+    private Boolean isPublicProfile = false;
+
     public UserEntity(String email, String password, String companyName, Sector sector) {
         this.email = email;
         this.password = password;
@@ -113,6 +122,30 @@ public class UserEntity implements UserDetails {
 
     public void setSiret(String siret) {
         this.siret = siret;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getBusinessHours() {
+        return businessHours;
+    }
+
+    public void setBusinessHours(String businessHours) {
+        this.businessHours = businessHours;
+    }
+
+    public Boolean getIsPublicProfile() {
+        return isPublicProfile;
+    }
+
+    public void setIsPublicProfile(Boolean isPublicProfile) {
+        this.isPublicProfile = isPublicProfile;
     }
 
     @Override

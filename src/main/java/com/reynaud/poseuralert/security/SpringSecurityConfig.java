@@ -65,6 +65,7 @@ public class SpringSecurityConfig {// extends WebSecurityConfiguration {
                         .antMatchers("/assets/**").permitAll()
                         .antMatchers("/static/**").permitAll()
                         .antMatchers("/inscription").permitAll()
+                        .antMatchers("/profil/public/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
