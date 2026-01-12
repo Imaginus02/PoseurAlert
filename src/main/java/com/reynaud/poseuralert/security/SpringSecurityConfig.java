@@ -4,7 +4,6 @@ import com.reynaud.poseuralert.dao.UserDao;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -61,7 +60,7 @@ public class SpringSecurityConfig {// extends WebSecurityConfiguration {
                         .antMatchers("/login.html").permitAll()
                         .antMatchers("/login?error=true").permitAll()
                         .antMatchers("/console/**").permitAll()
-                        .antMatchers(HttpMethod.GET, "/api/**").hasRole(ROLE_ADMIN)
+                        .antMatchers("/api/**").authenticated()
                         .antMatchers("/api/sessions/**").permitAll()
                         .antMatchers("/assets/**").permitAll()
                         .antMatchers("/static/**").permitAll()

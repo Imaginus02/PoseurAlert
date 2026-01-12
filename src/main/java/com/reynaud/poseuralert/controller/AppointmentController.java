@@ -201,7 +201,7 @@ public class AppointmentController {
             // Créer le signalement
             ReportEntity report = new ReportEntity(appointment.getClientPhone(), user, appointment, reason);
             report.setAdditionalNotes(additionalNotes);
-            ReportEntity savedReport = reportDao.save(report);
+            reportDao.save(report);
 
             // Mettre à jour ou créer l'entrée dans ClientPhoneEntity
             ClientPhoneEntity clientPhone = clientPhoneDao.findByPhoneNumber(appointment.getClientPhone())
