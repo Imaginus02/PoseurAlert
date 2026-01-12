@@ -1,25 +1,17 @@
 package com.reynaud.poseuralert.security;
 
 import com.reynaud.poseuralert.dao.UserDao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import java.util.List;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -64,6 +56,7 @@ public class SpringSecurityConfig {// extends WebSecurityConfiguration {
         System.out.println("=== BUILDING SPRING SECURITY FILTER CHAIN ===");
 
         http.authorizeHttpRequests((requests) -> requests
+                        .antMatchers("/").permitAll()
                         .antMatchers("/login").permitAll()
                         .antMatchers("/login.html").permitAll()
                         .antMatchers("/login?error=true").permitAll()
@@ -86,7 +79,7 @@ public class SpringSecurityConfig {// extends WebSecurityConfiguration {
                         .successHandler((request, response, authentication) -> {
                             System.out.println("=== LOGIN SUCCESS ===");
                             System.out.println("User: " + authentication.getName());
-                            response.sendRedirect("/");
+                            response.sendRedirect("/rendez-vous");
                         })
                         .failureHandler((request, response, exception) -> {
                             System.out.println("=== LOGIN FAILURE ===");

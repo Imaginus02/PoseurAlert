@@ -23,6 +23,7 @@
             </div>
                 <div class="card-body">
                     <form action="/rendez-vous/nouveau" method="post">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="clientName" class="form-label" th:text="'Nom du ' + ${sectorLabels.getClientLabel(user.sector)} + ' *'">Nom du client *</label>

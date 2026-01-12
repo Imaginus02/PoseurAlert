@@ -81,19 +81,34 @@ public class AppointmentController {
     }
 
     @GetMapping("/nouveau")
-    public String newAppointmentForm(@AuthenticationPrincipal UserEntity user, Model model) {
+    public String newAppointmentForm(@AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails userDetails, Model model) {
+        // Récupérer l'UserEntity depuis la base de données en utilisant l'email
+        UserEntity user = userDao.findByEmail(userDetails.getUsername());
+
+        if (user == null) {
+            System.err.println("ERROR: User not found in database for email: " + userDetails.getUsername());
+            return "redirect:/login";
+        }
+
         model.addAttribute("user", user);
         model.addAttribute("sectorLabels", new SectorLabels());
         return "new-appointment";
     }
 
     @PostMapping("/nouveau")
-    public String createAppointment(@AuthenticationPrincipal UserEntity user,
+    public String createAppointment(@AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails userDetails,
                                   @RequestParam String clientName,
                                   @RequestParam String clientPhone,
                                   @RequestParam String appointmentDateTime,
                                   @RequestParam(required = false) String notes,
                                   RedirectAttributes redirectAttributes) {
+        // Récupérer l'UserEntity depuis la base de données en utilisant l'email
+        UserEntity user = userDao.findByEmail(userDetails.getUsername());
+
+        if (user == null) {
+            System.err.println("ERROR: User not found in database for email: " + userDetails.getUsername());
+            return "redirect:/login";
+        }
 
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
@@ -128,8 +143,15 @@ public class AppointmentController {
     @PostMapping("/{id}/statut")
     public String updateAppointmentStatus(@PathVariable Long id,
                                         @RequestParam AppointmentStatus status,
-                                        @AuthenticationPrincipal UserEntity user,
+                                        @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails userDetails,
                                         RedirectAttributes redirectAttributes) {
+        // Récupérer l'UserEntity depuis la base de données en utilisant l'email
+        UserEntity user = userDao.findByEmail(userDetails.getUsername());
+
+        if (user == null) {
+            System.err.println("ERROR: User not found in database for email: " + userDetails.getUsername());
+            return "redirect:/login";
+        }
 
         Optional<AppointmentEntity> appointmentOpt = appointmentDao.findById(id);
         if (appointmentOpt.isPresent()) {
@@ -156,8 +178,15 @@ public class AppointmentController {
     public String reportAppointment(@PathVariable Long id,
                                   @RequestParam ReportReason reason,
                                   @RequestParam(required = false) String additionalNotes,
-                                  @AuthenticationPrincipal UserEntity user,
+                                  @AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails userDetails,
                                   RedirectAttributes redirectAttributes) {
+        // Récupérer l'UserEntity depuis la base de données en utilisant l'email
+        UserEntity user = userDao.findByEmail(userDetails.getUsername());
+
+        if (user == null) {
+            System.err.println("ERROR: User not found in database for email: " + userDetails.getUsername());
+            return "redirect:/login";
+        }
 
         Optional<AppointmentEntity> appointmentOpt = appointmentDao.findById(id);
         if (appointmentOpt.isPresent()) {

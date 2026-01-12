@@ -82,6 +82,7 @@
                                             <!-- Boutons de changement de statut -->
                                             <form th:if="${appointment.status.name() != 'COMPLETED' && appointment.status.name() != 'NO_SHOW'}"
                                                   th:action="@{'/rendez-vous/' + ${appointment.id} + '/statut'}" method="post" class="d-inline">
+                                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                                 <input type="hidden" name="status" value="CONFIRMED">
                                                 <button type="submit" class="btn btn-outline-success btn-sm"
                                                         th:if="${appointment.status.name() == 'SCHEDULED'}">Confirmer</button>
@@ -89,6 +90,7 @@
 
                                             <form th:if="${appointment.status.name() != 'COMPLETED' && appointment.status.name() != 'CANCELLED' && appointment.status.name() != 'NO_SHOW'}"
                                                   th:action="@{'/rendez-vous/' + ${appointment.id} + '/statut'}" method="post" class="d-inline">
+                                                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                                 <input type="hidden" name="status" value="COMPLETED">
                                                 <button type="submit" class="btn btn-outline-info btn-sm">Terminer</button>
                                             </form>
@@ -111,6 +113,7 @@
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                     </div>
                                                     <form th:action="@{'/rendez-vous/' + ${appointment.id} + '/signaler'}" method="post">
+                                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                                                         <div class="modal-body">
                                                             <div class="mb-3">
                                                                 <label class="form-label">Motif du signalement :</label>
