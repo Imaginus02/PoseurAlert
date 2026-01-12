@@ -131,11 +131,18 @@ public class ProfileController {
         }
     }
 
-    @GetMapping("/public/{companyName}")
-    public String showPublicProfile(@PathVariable String companyName, Model model) {
+    @GetMapping("/public/{companySlug}")
+    public String showPublicProfile(@PathVariable String companySlug, Model model) {
         System.out.println("=== PUBLIC PROFILE REQUESTED ===");
 
-        UserEntity user = userDao.findByCompanyName(companyName);
+        // Essayer d'abord avec le slug tel quel
+        UserEntity user = userDao.findByCompanyName(companySlug);
+        if (user == null) {
+            // Si pas trouvé, essayer de convertir le slug en nom d'entreprise
+            String companyName = slugToCompanyName(companySlug);
+            user = userDao.findByCompanyName(companyName);
+        }
+
         if (user == null || !Boolean.TRUE.equals(user.getIsPublicProfile())) {
             return "redirect:/login?error=profile_not_found";
         }
