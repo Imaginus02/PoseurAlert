@@ -88,11 +88,11 @@
 
                 <hr class="my-4">
                 <div class="text-center">
-                    <a href="/login?redirect=rendez-vous/nouveau" class="btn btn-primary btn-lg">
+                    <a th:href="@{/rendez-vous/public/nouveau/{id}(id=${company.id})}" class="btn btn-primary btn-lg">
                         📅 Prendre rendez-vous
                     </a>
                     <p class="text-muted mt-2 small">
-                        Connectez-vous pour accéder au système de rendez-vous
+                        Réservez directement sans créer de compte
                     </p>
                 </div>
             </div>

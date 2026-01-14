@@ -226,4 +226,71 @@ public class AppointmentController {
 
         return "redirect:/rendez-vous";
     }
+
+    // ===== Endpoints pour les réservations publiques =====
+
+    @GetMapping("/public/nouveau/{professionalId}")
+    public String showPublicBookingForm(@PathVariable Long professionalId, Model model) {
+        System.out.println("=== PUBLIC BOOKING FORM REQUESTED FOR PROFESSIONAL: " + professionalId + " ===");
+
+        Optional<UserEntity> professionalOpt = userDao.findById(professionalId);
+        if (!professionalOpt.isPresent() || !Boolean.TRUE.equals(professionalOpt.get().getIsPublicProfile())) {
+            return "redirect:/login?error=profile_not_found";
+        }
+
+        UserEntity professional = professionalOpt.get();
+        model.addAttribute("professional", professional);
+        model.addAttribute("sectorLabels", new SectorLabels());
+        return "public-booking";
+    }
+
+    @PostMapping("/public/nouveau/{professionalId}")
+    public String createPublicAppointment(@PathVariable Long professionalId,
+                                        @RequestParam String clientName,
+                                        @RequestParam String clientPhone,
+                                        @RequestParam String appointmentDateTime,
+                                        @RequestParam(required = false) String notes,
+                                        RedirectAttributes redirectAttributes) {
+        System.out.println("=== CREATING PUBLIC APPOINTMENT FOR PROFESSIONAL: " + professionalId + " ===");
+
+        Optional<UserEntity> professionalOpt = userDao.findById(professionalId);
+        if (!professionalOpt.isPresent() || !Boolean.TRUE.equals(professionalOpt.get().getIsPublicProfile())) {
+            redirectAttributes.addFlashAttribute("error", "Le profil n'est pas disponible.");
+            return "redirect:/";
+        }
+
+        UserEntity professional = professionalOpt.get();
+
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+            LocalDateTime appointmentDate = LocalDateTime.parse(appointmentDateTime, formatter);
+
+            // Vérifier si le numéro de téléphone est déjà signalé
+            Optional<ClientPhoneEntity> existingPhone = clientPhoneDao.findByPhoneNumber(clientPhone);
+            boolean isFlagged = existingPhone.isPresent() && existingPhone.get().getIsFlagged();
+
+            if (isFlagged) {
+                redirectAttributes.addFlashAttribute("warning",
+                    "Attention : Ce numéro de téléphone a été signalé plusieurs fois. Votre demande sera examinée par le professionnel.");
+            }
+
+            AppointmentEntity appointment = new AppointmentEntity(professional, clientName, clientPhone, appointmentDate);
+            appointment.setNotes(notes);
+            AppointmentEntity savedAppointment = appointmentDao.save(appointment);
+
+            // Audit pour les professionnels de santé
+            logAuditAction(professional, "CREATE_PUBLIC", "APPOINTMENT", savedAppointment.getId().toString(),
+                          "Création de rendez-vous public pour " + clientName + " (" + clientPhone + ")");
+
+            redirectAttributes.addFlashAttribute("success", 
+                "Votre rendez-vous a été enregistré avec succès ! Le professionnel vous contactera pour confirmation.");
+            return "redirect:/profil/public/" + professionalId;
+
+        } catch (Exception e) {
+            System.err.println("ERROR creating public appointment: " + e.getMessage());
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Erreur lors de la création du rendez-vous. Veuillez réessayer.");
+            return "redirect:/rendez-vous/public/nouveau/" + professionalId;
+        }
+    }
 }

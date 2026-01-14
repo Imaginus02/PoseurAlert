@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport"="width=device-width, initial-scale=1">
+    <title th:text="'À POINT - Réserver chez ' + ${professional.companyName}">À POINT - Réserver un rendez-vous</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #667eea;
+            --primary-dark: #764ba2;
+            --secondary-color: #64748b;
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--light-bg);
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .brand-title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            border-color: var(--primary-dark);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+
+        .alert {
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="profile-header">
+        <div class="container">
+            <div class="text-center">
+                <h1 class="brand-title">À POINT</h1>
+                <h2 class="mb-0" th:text="'Réserver chez ' + ${professional.companyName}">Réserver un rendez-vous</h2>
+                <p class="mt-2" th:if="${professional.sector}">
+                    <span th:text="${professional.sector.displayName}"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                
+                <!-- Messages d'alerte -->
+                <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle me-2"></i>
+                    <span th:text="${success}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                
+                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    <span th:text="${error}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+                <div th:if="${warning}" class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-circle me-2"></i>
+                    <span th:text="${warning}"></span>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+                <!-- Booking Form -->
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h4 class="mb-0">
+                            <i class="bi bi-calendar-plus me-2 text-primary"></i>
+                            Demander un rendez-vous
+                        </h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <form th:action="@{/rendez-vous/public/nouveau/{id}(id=${professional.id})}" method="post">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            
+                            <!-- Information professionnelle -->
+                            <div class="alert alert-info mb-4">
+                                <h6 class="alert-heading mb-2">ℹ️ À propos de cette réservation</h6>
+                                <p class="mb-1" th:text="'Vous réservez un rendez-vous chez ' + ${professional.companyName} + '.'"></p>
+                                <p class="mb-0 small">Vous recevrez une confirmation une fois votre demande examinée par le professionnel.</p>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="clientName" class="form-label" th:text="'Votre nom *'">Votre nom *</label>
+                                    <input type="text" class="form-control" id="clientName" name="clientName"
+                                           placeholder="Nom et prénom" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="clientPhone" class="form-label">Votre téléphone *</label>
+                                    <input type="tel" class="form-control" id="clientPhone" name="clientPhone"
+                                           placeholder="01 23 45 67 89" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="appointmentDateTime" class="form-label">Date et heure souhaitées *</label>
+                                <input type="datetime-local" class="form-control" id="appointmentDateTime"
+                                       name="appointmentDateTime" required>
+                                <div class="form-text">
+                                    Sélectionnez la date et l'heure qui vous conviennent. Le professionnel vous contactera pour confirmer.
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="notes" class="form-label">Message (optionnel)</label>
+                                <textarea class="form-control" id="notes" name="notes" rows="3"
+                                          placeholder="Décrivez la raison de votre visite ou toute information utile..."></textarea>
+                            </div>
+
+                            <!-- Horaires d'ouverture -->
+                            <div th:if="${professional.businessHours}" class="alert alert-light mb-4">
+                                <h6 class="mb-2">🕒 Horaires d'ouverture</h6>
+                                <pre class="mb-0 small text-dark" style="font-family: inherit; white-space: pre-wrap;" th:text="${professional.businessHours}"></pre>
+                            </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-between">
+                                <a th:href="@{/profil/public/{id}(id=${professional.id})}" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left me-2"></i>Retour au profil
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-check-circle me-2"></i>Envoyer ma demande
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Avertissement HDS pour les professionnels de santé -->
+                <div th:if="${sectorLabels.requiresHDSCompliance(professional.sector)}" class="alert alert-info mt-3" role="alert">
+                    <h6 class="alert-heading">🔒 Protection des données</h6>
+                    <p class="mb-0">Ce professionnel est soumis à la conformité HDS (Hébergement de Données de Santé). Vos informations sont sécurisées.</p>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="text-center py-4 mt-5">
+        <div class="container">
+            <p class="text-muted mb-2">Propulsé par <strong>À POINT</strong> - Gestion de rendez-vous professionnelle</p>
+            <div>
+                <a href="/" class="btn btn-sm btn-outline-primary me-2">🏠 Accueil</a>
+                <a href="/inscription" class="btn btn-sm btn-outline-secondary">✨ S'inscrire</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"></script>
+
+    <!-- Custom JS -->
+    <script>
+        // Définir la date minimale à aujourd'hui
+        document.addEventListener('DOMContentLoaded', function() {
+            const dateInput = document.getElementById('appointmentDateTime');
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const minDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+            dateInput.min = minDateTime;
+
+            // Auto-hide alerts after 5 seconds
+            const alerts = document.querySelectorAll('.alert-dismissible');
+            alerts.forEach(function(alert) {
+                setTimeout(function() {
+                    const bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>

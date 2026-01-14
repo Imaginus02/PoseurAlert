@@ -11,14 +11,22 @@ import com.reynaud.poseuralert.model.UserEntity;
 public class ViewController {
 
     @GetMapping("/login")
-    public String showLoginPage() {
+    public String showLoginPage(@AuthenticationPrincipal UserEntity user) {
         System.out.println("=== LOGIN PAGE REQUESTED ===");
+        if (user != null) {
+            // Si l'utilisateur est déjà connecté, le rediriger vers ses rendez-vous
+            return "redirect:/rendez-vous";
+        }
         return "login"; // Returns login.html
     }
 
     @GetMapping("/inscription")
-    public String showRegisterPage() {
+    public String showRegisterPage(@AuthenticationPrincipal UserEntity user) {
         System.out.println("Showing registration page");
+        if (user != null) {
+            // Si l'utilisateur est déjà connecté, le rediriger vers ses rendez-vous
+            return "redirect:/rendez-vous";
+        }
         return "inscription";
     }
 
