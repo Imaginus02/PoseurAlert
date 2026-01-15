@@ -121,7 +121,7 @@ public class ProfileController {
 
         Optional<UserEntity> userOptional = userDao.findById(id);
         if (!userOptional.isPresent() || !Boolean.TRUE.equals(userOptional.get().getIsPublicProfile())) {
-            return "redirect:/login?error=profile_not_found";
+            return "redirect:/profil/public/not-found";
         }
 
         UserEntity user = userOptional.get();

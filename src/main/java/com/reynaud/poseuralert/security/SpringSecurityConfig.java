@@ -59,6 +59,7 @@ public class SpringSecurityConfig {// extends WebSecurityConfiguration {
                         .antMatchers("/login").permitAll()
                         .antMatchers("/login.html").permitAll()
                         .antMatchers("/login?error=true").permitAll()
+                        .antMatchers("/logout").permitAll()
                         .antMatchers("/console/**").permitAll()
                         .antMatchers("/api/**").authenticated()
                         .antMatchers("/api/sessions/**").permitAll()
