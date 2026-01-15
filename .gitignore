@@ -5,6 +5,8 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 Document de cadrage de développement 1.pdf
+TEST_DATA_SUMMARY.md
+TEST_README.md
 
 ### STS ###
 .apt_generated
