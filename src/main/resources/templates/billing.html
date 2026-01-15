@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>À POINT - Facturation</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #64748b;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --danger-color: #dc2626;
+            --light-bg: #f8fafc;
+            --white: #ffffff;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-600: #475569;
+            --gray-800: #1e293b;
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--gray-800);
+            line-height: 1.6;
+        }
+
+        /* Navbar */
+        .navbar {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            box-shadow: var(--shadow);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--white) !important;
+        }
+
+        .nav-link {
+            color: var(--white) !important;
+            margin: 0 0.5rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .nav-link:hover {
+            opacity: 0.8;
+        }
+
+        .btn-logout {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            color: var(--white);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white);
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+        }
+
+        /* Cards */
+        .stat-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .stat-card-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .stat-card-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 0.5rem 0;
+        }
+
+        .stat-card-label {
+            font-size: 0.95rem;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        /* Section Breakdown */
+        .breakdown-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .breakdown-item-label {
+            display: flex;
+            align-items: center;
+            font-size: 1rem;
+        }
+
+        .breakdown-item-icon {
+            font-size: 1.5rem;
+            margin-right: 0.75rem;
+            color: var(--primary-color);
+        }
+
+        .breakdown-item-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        /* Billing Summary */
+        .billing-summary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: var(--white);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .billing-summary h3 {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .billing-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .billing-row:last-child {
+            border-bottom: none;
+        }
+
+        .billing-row-label {
+            font-size: 1rem;
+            opacity: 0.95;
+        }
+
+        .billing-row-value {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .amount-due {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .amount-due-label {
+            font-size: 0.95rem;
+            opacity: 0.95;
+            margin-bottom: 0.5rem;
+        }
+
+        .amount-due-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        /* Alert Messages */
+        .alert {
+            border-radius: 0.75rem;
+            border: 1px solid;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            min-height: 60vh;
+            padding-bottom: 2rem;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--gray-800);
+            color: var(--white);
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 1.75rem;
+            }
+
+            .stat-card-value {
+                font-size: 1.75rem;
+            }
+
+            .breakdown-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .breakdown-item-value {
+                margin-top: 0.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav th:replace="fragments/navbar :: navbar('billing')"></nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <h1><i class="bi bi-receipt me-3"></i>Facturation</h1>
+            <p>Consultez vos statistiques SMS et vos factures</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+
+            <!-- Error Message -->
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                <span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <!-- Billing Summary Section -->
+            <div class="row mb-4">
+                <div class="col-lg-6">
+                    <div class="billing-summary">
+                        <h3><i class="bi bi-bar-chart me-2"></i>Résumé de Facturation</h3>
+                        
+                        <div class="billing-row">
+                            <span class="billing-row-label">SMS Total Envoyés</span>
+                            <span class="billing-row-value" th:text="${totalSms}">0</span>
+                        </div>
+
+                        <div class="billing-row">
+                            <span class="billing-row-label">Prix par SMS</span>
+                            <span class="billing-row-value">€<span th:text="${pricePerSms}">0.10</span></span>
+                        </div>
+
+                        <div class="amount-due">
+                            <div class="amount-due-label">Montant Total à Payer</div>
+                            <div class="amount-due-value">€<span th:text="${amountDue}">0.00</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SMS Statistics Cards -->
+                <div class="col-lg-6">
+                    <!-- Total SMS Card -->
+                    <div class="stat-card">
+                        <div class="stat-card-icon">
+                            <i class="bi bi-chat-dots text-primary"></i>
+                        </div>
+                        <div class="stat-card-label">SMS Total</div>
+                        <div class="stat-card-value" th:text="${totalSms}">0</div>
+                    </div>
+
+                    <!-- Active Contacts Card -->
+                    <div class="stat-card">
+                        <div class="stat-card-icon">
+                            <i class="bi bi-person-check text-success"></i>
+                        </div>
+                        <div class="stat-card-label">Contacts Actifs</div>
+                        <div class="stat-card-value" th:text="${activeContacts}">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SMS Breakdown Section -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="breakdown-card">
+                        <h4 class="mb-3"><i class="bi bi-pie-chart me-2"></i>Répartition des SMS par Catégorie</h4>
+                        
+                        <div class="breakdown-item">
+                            <span class="breakdown-item-label">
+                                <i class="bi bi-calendar-check breakdown-item-icon"></i>
+                                Rappels de Rendez-vous
+                            </span>
+                            <span class="breakdown-item-value" th:text="${reminderSms}">0</span>
+                        </div>
+
+                        <div class="breakdown-item">
+                            <span class="breakdown-item-label">
+                                <i class="bi bi-megaphone breakdown-item-icon"></i>
+                                Textes Promotionnels
+                            </span>
+                            <span class="breakdown-item-value" th:text="${promotionalSms}">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="col-lg-6">
+                    <div class="breakdown-card">
+                        <h4 class="mb-3"><i class="bi bi-info-circle me-2"></i>Informations Supplémentaires</h4>
+                        
+                        <div class="breakdown-item">
+                            <span class="breakdown-item-label">
+                                <i class="bi bi-building breakdown-item-icon"></i>
+                                Votre Entreprise
+                            </span>
+                            <span class="breakdown-item-value" th:text="${user?.companyName}">-</span>
+                        </div>
+
+                        <div class="breakdown-item">
+                            <span class="breakdown-item-label">
+                                <i class="bi bi-tag breakdown-item-icon"></i>
+                                Secteur
+                            </span>
+                            <span class="breakdown-item-value" th:text="${user?.sector?.displayName}">-</span>
+                        </div>
+
+                        <div class="breakdown-item">
+                            <span class="breakdown-item-label">
+                                <i class="bi bi-envelope breakdown-item-icon"></i>
+                                Email
+                            </span>
+                            <span class="breakdown-item-value small" th:text="${user?.email}">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pricing Information -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="breakdown-card">
+                        <h4 class="mb-3"><i class="bi bi-receipt me-2"></i>Détails de Facturation</h4>
+                        
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th class="text-end">Quantité</th>
+                                    <th class="text-end">Prix Unitaire</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>SMS Envoyés</td>
+                                    <td class="text-end" th:text="${totalSms}">0</td>
+                                    <td class="text-end">€<span th:text="${pricePerSms}">0.10</span></td>
+                                    <td class="text-end fw-bold">€<span th:text="${amountDue}">0.00</span></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-active">
+                                    <td colspan="3" class="text-end fw-bold">TOTAL À PAYER:</td>
+                                    <td class="text-end fw-bold">€<span th:text="${amountDue}">0.00</span></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="d-flex gap-2 justify-content-between">
+                        <a href="/tableau-de-bord" class="btn btn-outline-primary">
+                            <i class="bi bi-arrow-left me-2"></i>Retour au tableau de bord
+                        </a>
+                        <button type="button" class="btn btn-primary" onclick="window.print()">
+                            <i class="bi bi-printer me-2"></i>Imprimer la Facture
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p class="mb-0">&copy; 2026 À POINT. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+</body>
+
+</html>
