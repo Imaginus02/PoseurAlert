@@ -1,7 +1,6 @@
 package com.reynaud.poseuralert.controller;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,11 +42,10 @@ public class ViewController {
     }
 
     @GetMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response, @AuthenticationPrincipal UserEntity user) {
+    public String logout() {
         System.out.println("=== LOGOUT PAGE REQUESTED ===");
-        if (user != null) {
-            new SecurityContextLogoutHandler().logout(request, response, org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication());
-        }
+        // La déconnexion est gérée par Spring Security via POST /logout.
+        // Cette route sert uniquement à afficher la page de confirmation.
         return "logout";
     }
 

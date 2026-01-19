@@ -68,6 +68,7 @@ public class SpringSecurityConfig {// extends WebSecurityConfiguration {
                         .antMatchers("/inscription").permitAll()
                         .antMatchers("/profil/public/**").permitAll()
                         .antMatchers("/rendez-vous/public/**").permitAll()
+                        .antMatchers( "/favicon.ico").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
@@ -90,7 +91,13 @@ public class SpringSecurityConfig {// extends WebSecurityConfiguration {
                             response.sendRedirect("/login?error=true");
                         })
                 )
-                .logout(withDefaults())
+                .logout(logout -> logout
+                    .logoutUrl("/logout")
+                    .logoutSuccessUrl("/logout")
+                    .invalidateHttpSession(true)
+                    .clearAuthentication(true)
+                    .deleteCookies("JSESSIONID")
+                )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint((request, response, authException) -> response.sendRedirect("/login"))
                 )
