@@ -3,6 +3,7 @@ package com.reynaud.poseuralert.controller;
 import com.reynaud.poseuralert.dao.UserDao;
 import com.reynaud.poseuralert.model.Sector;
 import com.reynaud.poseuralert.model.UserEntity;
+import com.reynaud.poseuralert.util.logging.Loggers;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,12 +31,12 @@ public class ProfileController {
 
     @GetMapping
     public String showProfilePage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        System.out.println("=== PROFILE PAGE REQUESTED ===");
+        Loggers.access().info("PROFILE PAGE REQUESTED user={}", userDetails.getUsername());
 
         // Récupérer l'UserEntity depuis la base de données
         UserEntity user = userDao.findByEmail(userDetails.getUsername());
         if (user == null) {
-            System.err.println("ERROR: User not found in database for email: " + userDetails.getUsername());
+            Loggers.technical().error("User not found for email {}", userDetails.getUsername());
             return "redirect:/login";
         }
 
@@ -61,13 +62,13 @@ public class ProfileController {
                                @RequestParam(required = false) Boolean isPublicProfile,
                                RedirectAttributes redirectAttributes) {
 
-        System.out.println("=== UPDATE PROFILE REQUESTED ===");
+        Loggers.business().info("UPDATE PROFILE REQUESTED by {}", userDetails.getUsername());
 
         try {
             // Récupérer l'UserEntity depuis la base de données
             UserEntity user = userDao.findByEmail(userDetails.getUsername());
             if (user == null) {
-                System.err.println("ERROR: User not found in database for email: " + userDetails.getUsername());
+                Loggers.technical().error("User not found for email {}", userDetails.getUsername());
                 return "redirect:/login";
             }
             // Vérifier si l'email est déjà utilisé par un autre utilisateur
@@ -109,17 +110,24 @@ public class ProfileController {
             return "redirect:/profil";
 
         } catch (Exception e) {
-            System.out.println("ERROR updating profile: " + e.getMessage());
+            Loggers.technical().error("ERROR updating profile for {} cause={}", userDetails.getUsername(), e.getMessage());
             redirectAttributes.addFlashAttribute("error", "Une erreur est survenue lors de la mise à jour du profil.");
             return "redirect:/profil";
         }
     }
 
-    @GetMapping("/public/{id}")
-    public String showPublicProfile(@PathVariable Long id, Model model) {
-        System.out.println("=== PUBLIC PROFILE REQUESTED ===");
+    @GetMapping("/public/{idOrUid}")
+    public String showPublicProfile(@PathVariable String idOrUid, Model model) {
+        Loggers.access().info("PUBLIC PROFILE REQUESTED idOrUid={}", idOrUid);
 
-        Optional<UserEntity> userOptional = userDao.findById(id);
+        Optional<UserEntity> userOptional;
+        try {
+            Long id = Long.valueOf(idOrUid);
+            userOptional = userDao.findById(id);
+        } catch (NumberFormatException ex) {
+            userOptional = Optional.ofNullable(userDao.findByUid(idOrUid));
+        }
+
         if (!userOptional.isPresent() || !Boolean.TRUE.equals(userOptional.get().getIsPublicProfile())) {
             return "redirect:/profil/public/not-found";
         }

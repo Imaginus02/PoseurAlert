@@ -3,6 +3,7 @@ package com.reynaud.poseuralert.controller;
 import com.reynaud.poseuralert.dao.UserDao;
 import com.reynaud.poseuralert.model.Sector;
 import com.reynaud.poseuralert.model.UserEntity;
+import com.reynaud.poseuralert.util.logging.Loggers;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,26 +39,17 @@ public class RegisterController {
                                        @RequestParam(required = false) String phoneNumber,
                                        @RequestParam(required = false) String siret) {
 
-        // Debug logging
-        System.out.println("=== REGISTER CONTROLLER CALLED ===");
-        System.out.println("Email: " + email);
-        System.out.println("Password: " + (password != null ? "[PRESENT]" : "[NULL]"));
-        System.out.println("PasswordConfirm: " + (passwordConfirm != null ? "[PRESENT]" : "[NULL]"));
-        System.out.println("CompanyName: " + companyName);
-        System.out.println("Sector: " + sector);
-        System.out.println("Address: " + address);
-        System.out.println("PhoneNumber: " + phoneNumber);
-        System.out.println("Siret: " + siret);
+        Loggers.business().info("REGISTRATION ATTEMPT email={} company={} sector={} phone={} siret={} ", email, companyName, sector, phoneNumber, (siret != null ? "[PRESENT]" : "[NULL]"));
 
         // Verify if the user entered the same password twice
         if (password == null || passwordConfirm == null || !password.equals(passwordConfirm)) {
-            System.out.println("ERROR: Password mismatch or null");
+            Loggers.access().warn("REGISTRATION FAILED: password mismatch for {}", email);
             return "redirect:/inscription?error=true";
         }
 
         // Verify required fields
         if (companyName == null || companyName.trim().isEmpty() || sector == null || sector.trim().isEmpty()) {
-            System.out.println("ERROR: Required fields missing");
+            Loggers.business().warn("REGISTRATION FAILED: missing fields email={}", email);
             return "redirect:/inscription?error=true";
         }
 
@@ -65,9 +57,9 @@ public class RegisterController {
         Sector sectorEnum;
         try {
             sectorEnum = Sector.valueOf(sector);
-            System.out.println("Sector enum converted successfully: " + sectorEnum);
+            Loggers.technical().debug("Sector parsed: {}", sectorEnum);
         } catch (IllegalArgumentException e) {
-            System.out.println("ERROR: Invalid sector value: " + sector);
+            Loggers.business().warn("REGISTRATION FAILED: invalid sector value {} for email {}", sector, email);
             return "redirect:/inscription?error=true";
         }
 
@@ -81,8 +73,7 @@ public class RegisterController {
 
         // Hash the password before saving
         String hashedPassword = passwordEncoder.encode(password);
-        System.out.println("Password hashed successfully with encoder: " + passwordEncoder.getClass().getSimpleName());
-        System.out.println("Hashed password starts with: " + hashedPassword.substring(0, 10) + "...");
+        Loggers.diagnostic().debug("Password hashed with {}", passwordEncoder.getClass().getSimpleName());
 
         // Save the new user into the database
         UserEntity user = new UserEntity(email, hashedPassword, companyName, sectorEnum);
@@ -94,25 +85,21 @@ public class RegisterController {
             UserEntity savedUser = userDao.save(user);
             // Forcer l'écriture immédiate en base
             entityManager.flush();
-            System.out.println("User saved and flushed successfully with ID: " + savedUser.getId());
+            Loggers.business().info("USER REGISTERED email={} id={}", savedUser.getEmail(), savedUser.getId());
 
             // Vérification supplémentaire : récupérer l'utilisateur depuis la base
             UserEntity retrievedUser = userDao.findByEmail(email);
             if (retrievedUser != null) {
-                System.out.println("VERIFICATION: User found in database with email: " + retrievedUser.getEmail() +
-                                 ", company: " + retrievedUser.getCompanyName() +
-                                 ", sector: " + retrievedUser.getSector());
+                Loggers.technical().info("VERIFIED USER PERSISTENCE email={} sector={} ", retrievedUser.getEmail(), retrievedUser.getSector());
             } else {
-                System.out.println("ERROR: User not found in database after save!");
+                Loggers.technical().error("User not found after save email={}", email);
                 return "redirect:/inscription?error=true";
             }
         } catch (Exception e) {
-            System.out.println("ERROR saving user: " + e.getMessage());
-            e.printStackTrace();
+            Loggers.technical().error("Error saving user email={} cause={}", email, e.getMessage());
             return "redirect:/inscription?error=true";
         }
-
-        System.out.println("=== REGISTER PROCESS COMPLETED SUCCESSFULLY ===");
+        Loggers.business().info("REGISTRATION COMPLETED email={}", email);
         return "login";
     }
 }

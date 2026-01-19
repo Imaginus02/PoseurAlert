@@ -1,6 +1,7 @@
 package com.reynaud.poseuralert.security;
 
 import com.reynaud.poseuralert.dao.UserDao;
+import com.reynaud.poseuralert.util.logging.Loggers;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -25,9 +26,8 @@ public class SpringSecurityConfig {// extends WebSecurityConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-        System.out.println("=== PASSWORD ENCODER CONFIGURED ===");
-        System.out.println("PasswordEncoder class: " + encoder.getClass().getSimpleName());
-        System.out.println("Application is starting up...");
+        Loggers.technical().info("PASSWORD ENCODER CONFIGURED: {}", encoder.getClass().getSimpleName());
+        Loggers.technical().info("Application is starting up...");
         return encoder;
     }
 
@@ -41,7 +41,7 @@ public class SpringSecurityConfig {// extends WebSecurityConfiguration {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder);
-        System.out.println("=== AUTHENTICATION PROVIDER CONFIGURED ===");
+        Loggers.technical().info("AUTHENTICATION PROVIDER CONFIGURED");
         return authProvider;
     }
 
@@ -50,7 +50,7 @@ public class SpringSecurityConfig {// extends WebSecurityConfiguration {
     @Bean
     @Order(2)
     public SecurityFilterChain basicFilterChain(HttpSecurity http) throws Exception {
-        System.out.println("=== BUILDING SPRING SECURITY FILTER CHAIN ===");
+        Loggers.technical().info("BUILDING SPRING SECURITY FILTER CHAIN");
 
         http.authorizeHttpRequests((requests) -> requests
                 .antMatchers("/console/**").permitAll()
@@ -79,16 +79,13 @@ public class SpringSecurityConfig {// extends WebSecurityConfiguration {
                         .usernameParameter("email")
                         .failureUrl("/login?error=true")
                         .successHandler((request, response, authentication) -> {
-                            System.out.println("=== LOGIN SUCCESS ===");
-                            System.out.println("User: " + authentication.getName());
+                            Loggers.access().info("LOGIN SUCCESS user={} ip={}", authentication.getName(), request.getRemoteAddr());
                     boolean isAdmin = authentication.getAuthorities().stream()
                         .anyMatch(auth -> auth.getAuthority().equals("ROLE_" + ROLE_ADMIN));
                     response.sendRedirect(isAdmin ? "/admin" : "/rendez-vous");
                         })
                         .failureHandler((request, response, exception) -> {
-                            System.out.println("=== LOGIN FAILURE ===");
-                            System.out.println("Exception: " + exception.getMessage());
-                            System.out.println("Username: " + request.getParameter("email"));
+                            Loggers.access().warn("LOGIN FAILURE user={} reason={} ip={}", request.getParameter("email"), exception.getMessage(), request.getRemoteAddr());
                             response.sendRedirect("/login?error=true");
                         })
                 )

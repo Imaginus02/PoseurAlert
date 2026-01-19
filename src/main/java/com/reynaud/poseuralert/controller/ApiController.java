@@ -4,6 +4,7 @@ import com.reynaud.poseuralert.dao.AppointmentDao;
 import com.reynaud.poseuralert.dao.ReportDao;
 import com.reynaud.poseuralert.dao.UserDao;
 import com.reynaud.poseuralert.model.*;
+import com.reynaud.poseuralert.util.logging.Loggers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -117,7 +118,7 @@ public class ApiController {
 
             return ResponseEntity.ok(appointmentDTOs);
         } catch (Exception e) {
-            System.err.println("ERROR in getUserAppointments: " + e.getMessage());
+            Loggers.technical().error("ERROR in getUserAppointments cause={}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -153,7 +154,7 @@ public class ApiController {
                 return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
-            System.err.println("ERROR in getAppointmentById: " + e.getMessage());
+            Loggers.technical().error("ERROR in getAppointmentById id={} cause={}", id, e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -181,7 +182,7 @@ public class ApiController {
 
             return ResponseEntity.ok(reportDTOs);
         } catch (Exception e) {
-            System.err.println("ERROR in getUserReports: " + e.getMessage());
+            Loggers.technical().error("ERROR in getUserReports cause={}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

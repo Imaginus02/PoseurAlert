@@ -16,6 +16,9 @@ public class UserEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "uid")
+    private String uid;
+
     @Column(nullable = false, name = "email")
     private String email;
 
@@ -63,6 +66,10 @@ public class UserEntity implements UserDetails {
 
     public Long getId() {
         return id;
+    }
+
+    public String getUid() {
+        return uid;
     }
 
     public String getEmail() {
@@ -155,6 +162,13 @@ public class UserEntity implements UserDetails {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (this.uid == null || this.uid.isEmpty()) {
+            this.uid = com.reynaud.poseuralert.util.UidGenerator.generateDeterministicFromEmail(this.email);
+        }
     }
 
     @Override

@@ -28,6 +28,8 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity5")
+	// JSON logging encoder for Logback (compatible with Spring Boot 2.7 / Logback 1.2)
+	implementation("net.logstash.logback:logstash-logback-encoder:6.6")
 }
 
 tasks.withType<Test> {

@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class ClientPhoneEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, name = "phone_number", unique = true)

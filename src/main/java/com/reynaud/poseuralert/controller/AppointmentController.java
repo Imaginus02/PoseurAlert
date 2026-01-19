@@ -7,6 +7,7 @@ import com.reynaud.poseuralert.dao.ReportDao;
 import com.reynaud.poseuralert.dao.UserDao;
 import com.reynaud.poseuralert.model.*;
 import com.reynaud.poseuralert.util.SectorLabels;
+import com.reynaud.poseuralert.util.logging.Loggers;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,18 +52,18 @@ public class AppointmentController {
     @GetMapping
     public String listAppointments(@AuthenticationPrincipal org.springframework.security.core.userdetails.UserDetails userDetails, Model model) {
         try {
-            System.out.println("=== LISTING APPOINTMENTS FOR USER: " + userDetails.getUsername() + " ===");
+            Loggers.access().info("LIST APPOINTMENTS user={}", userDetails.getUsername());
 
             // Récupérer l'UserEntity depuis la base de données en utilisant l'email
             UserEntity user = userDao.findByEmail(userDetails.getUsername());
 
             if (user == null) {
-                System.err.println("ERROR: User not found in database for email: " + userDetails.getUsername());
+                Loggers.technical().error("User not found for email {}", userDetails.getUsername());
                 return "redirect:/login";
             }
 
             List<AppointmentEntity> appointments = appointmentDao.findByProfessional(user);
-            System.out.println("Found " + appointments.size() + " appointments");
+            Loggers.business().info("APPOINTMENTS COUNT user={} count={}", userDetails.getUsername(), appointments.size());
 
             model.addAttribute("appointments", appointments);
             model.addAttribute("user", user);
@@ -71,11 +72,10 @@ public class AppointmentController {
             // Audit pour les professionnels de santé
             logAuditAction(user, "VIEW", "APPOINTMENTS", "LIST", "Consultation de la liste des rendez-vous");
 
-            System.out.println("Returning appointments template");
+            Loggers.diagnostic().debug("Returning appointments template");
             return "appointments";
         } catch (Exception e) {
-            System.err.println("ERROR in listAppointments: " + e.getMessage());
-            e.printStackTrace();
+            Loggers.technical().error("ERROR in listAppointments cause={}", e.getMessage());
             throw e;
         }
     }
@@ -86,7 +86,7 @@ public class AppointmentController {
         UserEntity user = userDao.findByEmail(userDetails.getUsername());
 
         if (user == null) {
-            System.err.println("ERROR: User not found in database for email: " + userDetails.getUsername());
+            Loggers.technical().error("User not found for email {}", userDetails.getUsername());
             return "redirect:/login";
         }
 
@@ -106,7 +106,7 @@ public class AppointmentController {
         UserEntity user = userDao.findByEmail(userDetails.getUsername());
 
         if (user == null) {
-            System.err.println("ERROR: User not found in database for email: " + userDetails.getUsername());
+            Loggers.technical().error("User not found for email {}", userDetails.getUsername());
             return "redirect:/login";
         }
 
@@ -149,7 +149,7 @@ public class AppointmentController {
         UserEntity user = userDao.findByEmail(userDetails.getUsername());
 
         if (user == null) {
-            System.err.println("ERROR: User not found in database for email: " + userDetails.getUsername());
+            Loggers.technical().error("User not found for email {}", userDetails.getUsername());
             return "redirect:/login";
         }
 
@@ -184,7 +184,7 @@ public class AppointmentController {
         UserEntity user = userDao.findByEmail(userDetails.getUsername());
 
         if (user == null) {
-            System.err.println("ERROR: User not found in database for email: " + userDetails.getUsername());
+            Loggers.technical().error("User not found for email {}", userDetails.getUsername());
             return "redirect:/login";
         }
 
@@ -229,11 +229,17 @@ public class AppointmentController {
 
     // ===== Endpoints pour les réservations publiques =====
 
-    @GetMapping("/public/nouveau/{professionalId}")
-    public String showPublicBookingForm(@PathVariable Long professionalId, Model model) {
-        System.out.println("=== PUBLIC BOOKING FORM REQUESTED FOR PROFESSIONAL: " + professionalId + " ===");
+    @GetMapping("/public/nouveau/{professionalIdOrUid}")
+    public String showPublicBookingForm(@PathVariable String professionalIdOrUid, Model model) {
+        Loggers.access().info("PUBLIC BOOKING FORM professionalIdOrUid={}", professionalIdOrUid);
 
-        Optional<UserEntity> professionalOpt = userDao.findById(professionalId);
+        Optional<UserEntity> professionalOpt;
+        try {
+            Long id = Long.valueOf(professionalIdOrUid);
+            professionalOpt = userDao.findById(id);
+        } catch (NumberFormatException ex) {
+            professionalOpt = Optional.ofNullable(userDao.findByUid(professionalIdOrUid));
+        }
         if (!professionalOpt.isPresent() || !Boolean.TRUE.equals(professionalOpt.get().getIsPublicProfile())) {
             return "redirect:/login?error=profile_not_found";
         }
@@ -244,16 +250,22 @@ public class AppointmentController {
         return "public-booking";
     }
 
-    @PostMapping("/public/nouveau/{professionalId}")
-    public String createPublicAppointment(@PathVariable Long professionalId,
+    @PostMapping("/public/nouveau/{professionalIdOrUid}")
+    public String createPublicAppointment(@PathVariable String professionalIdOrUid,
                                         @RequestParam String clientName,
                                         @RequestParam String clientPhone,
                                         @RequestParam String appointmentDateTime,
                                         @RequestParam(required = false) String notes,
                                         RedirectAttributes redirectAttributes) {
-        System.out.println("=== CREATING PUBLIC APPOINTMENT FOR PROFESSIONAL: " + professionalId + " ===");
+        Loggers.business().info("PUBLIC APPOINTMENT CREATE professionalIdOrUid={}", professionalIdOrUid);
 
-        Optional<UserEntity> professionalOpt = userDao.findById(professionalId);
+        Optional<UserEntity> professionalOpt;
+        try {
+            Long id = Long.valueOf(professionalIdOrUid);
+            professionalOpt = userDao.findById(id);
+        } catch (NumberFormatException ex) {
+            professionalOpt = Optional.ofNullable(userDao.findByUid(professionalIdOrUid));
+        }
         if (!professionalOpt.isPresent() || !Boolean.TRUE.equals(professionalOpt.get().getIsPublicProfile())) {
             redirectAttributes.addFlashAttribute("error", "Le profil n'est pas disponible.");
             return "redirect:/";
@@ -284,13 +296,12 @@ public class AppointmentController {
 
             redirectAttributes.addFlashAttribute("success", 
                 "Votre rendez-vous a été enregistré avec succès ! Le professionnel vous contactera pour confirmation.");
-            return "redirect:/profil/public/" + professionalId;
+            return "redirect:/profil/public/" + (professional.getUid() != null ? professional.getUid() : professional.getId());
 
         } catch (Exception e) {
-            System.err.println("ERROR creating public appointment: " + e.getMessage());
-            e.printStackTrace();
+            Loggers.technical().error("ERROR creating public appointment professional={} cause={}", professional.getId(), e.getMessage());
             redirectAttributes.addFlashAttribute("error", "Erreur lors de la création du rendez-vous. Veuillez réessayer.");
-            return "redirect:/rendez-vous/public/nouveau/" + professionalId;
+            return "redirect:/rendez-vous/public/nouveau/" + (professional.getUid() != null ? professional.getUid() : professional.getId());
         }
     }
 }

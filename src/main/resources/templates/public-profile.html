@@ -88,7 +88,7 @@
 
                 <hr class="my-4">
                 <div class="text-center">
-                    <a th:href="@{/rendez-vous/public/nouveau/{id}(id=${company.id})}" class="btn btn-primary btn-lg">
+                    <a th:href="@{/rendez-vous/public/nouveau/{id}(id=${company.uid != null ? company.uid : company.id})}" class="btn btn-primary btn-lg">
                         📅 Prendre rendez-vous
                     </a>
                     <p class="text-muted mt-2 small">

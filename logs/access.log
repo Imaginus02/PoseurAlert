@@ -1,0 +1,73 @@
+{"@timestamp":"2026-01-19T20:50:41.024+01:00","@version":"1","message":"LOGIN PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:50:42.932+01:00","@version":"1","message":"HOME PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:50:45.755+01:00","@version":"1","message":"HOME PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:50:51.269+01:00","@version":"1","message":"LIST APPOINTMENTS user=vet@test.com","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:50:52.981+01:00","@version":"1","message":"LOGIN PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:50:57.718+01:00","@version":"1","message":"HOME PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:50:59.331+01:00","@version":"1","message":"LIST APPOINTMENTS user=garage@test.com","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:51:00.767+01:00","@version":"1","message":"REGISTER PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:51:03.773+01:00","@version":"1","message":"HOME PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:51:06.684+01:00","@version":"1","message":"LIST APPOINTMENTS user=hairdresser@test.com","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:51:08.414+01:00","@version":"1","message":"LIST APPOINTMENTS user=beauty@test.com","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:51:11.400+01:00","@version":"1","message":"LIST APPOINTMENTS user=restaurant@test.com","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:51:13.036+01:00","@version":"1","message":"LIST APPOINTMENTS user=health@test.com","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:52:05.981+01:00","@version":"1","message":"LOGIN PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:52:07.475+01:00","@version":"1","message":"HOME PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:52:09.540+01:00","@version":"1","message":"HOME PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:52:13.812+01:00","@version":"1","message":"LIST APPOINTMENTS user=vet@test.com","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:52:15.160+01:00","@version":"1","message":"LOGIN PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:52:19.045+01:00","@version":"1","message":"HOME PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:52:20.367+01:00","@version":"1","message":"LIST APPOINTMENTS user=garage@test.com","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:52:21.636+01:00","@version":"1","message":"REGISTER PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:52:24.388+01:00","@version":"1","message":"HOME PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:52:27.228+01:00","@version":"1","message":"LIST APPOINTMENTS user=hairdresser@test.com","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:52:28.547+01:00","@version":"1","message":"LIST APPOINTMENTS user=beauty@test.com","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:52:31.333+01:00","@version":"1","message":"LIST APPOINTMENTS user=restaurant@test.com","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:52:32.704+01:00","@version":"1","message":"LIST APPOINTMENTS user=health@test.com","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:57:19.403+01:00","@version":"1","message":"LIST APPOINTMENTS user=restaurant@test.com","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:57:51.175+01:00","@version":"1","message":"LIST APPOINTMENTS user=restaurant@test.com","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:57:52.942+01:00","@version":"1","message":"LOGIN PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:57:54.197+01:00","@version":"1","message":"HOME PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:57:56.400+01:00","@version":"1","message":"HOME PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:58:00.965+01:00","@version":"1","message":"LIST APPOINTMENTS user=vet@test.com","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:58:02.279+01:00","@version":"1","message":"LOGIN PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:58:06.403+01:00","@version":"1","message":"HOME PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:58:08.181+01:00","@version":"1","message":"LIST APPOINTMENTS user=garage@test.com","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:58:09.789+01:00","@version":"1","message":"REGISTER PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:58:12.796+01:00","@version":"1","message":"HOME PAGE REQUESTED","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:58:15.614+01:00","@version":"1","message":"LIST APPOINTMENTS user=hairdresser@test.com","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:58:17.065+01:00","@version":"1","message":"LIST APPOINTMENTS user=beauty@test.com","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:58:19.834+01:00","@version":"1","message":"LIST APPOINTMENTS user=restaurant@test.com","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T20:58:21.341+01:00","@version":"1","message":"LIST APPOINTMENTS user=health@test.com","logger_name":"access","thread_name":"Test worker","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:08:00.630+01:00","@version":"1","message":"LOGIN PAGE REQUESTED","logger_name":"access","thread_name":"http-nio-8080-exec-1","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:08:08.510+01:00","@version":"1","message":"LOGIN SUCCESS user=dr.martin@clinic.com ip=0:0:0:0:0:0:0:1","logger_name":"access","thread_name":"http-nio-8080-exec-3","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:08:08.519+01:00","@version":"1","message":"LIST APPOINTMENTS user=dr.martin@clinic.com","logger_name":"access","thread_name":"http-nio-8080-exec-4","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:16:56.900+01:00","@version":"1","message":"LOGIN PAGE REQUESTED","logger_name":"access","thread_name":"http-nio-8080-exec-2","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:17:16.620+01:00","@version":"1","message":"LOGIN SUCCESS user=alice@restaurant.com ip=0:0:0:0:0:0:0:1","logger_name":"access","thread_name":"http-nio-8080-exec-4","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:17:16.631+01:00","@version":"1","message":"LIST APPOINTMENTS user=alice@restaurant.com","logger_name":"access","thread_name":"http-nio-8080-exec-5","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:17:23.722+01:00","@version":"1","message":"PROFILE PAGE REQUESTED user=alice@restaurant.com","logger_name":"access","thread_name":"http-nio-8080-exec-7","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:17:25.073+01:00","@version":"1","message":"PROFILE PAGE REQUESTED user=alice@restaurant.com","logger_name":"access","thread_name":"http-nio-8080-exec-9","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:17:26.717+01:00","@version":"1","message":"PUBLIC PROFILE REQUESTED idOrUid=2","logger_name":"access","thread_name":"http-nio-8080-exec-10","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:17:37.892+01:00","@version":"1","message":"LIST APPOINTMENTS user=alice@restaurant.com","logger_name":"access","thread_name":"http-nio-8080-exec-1","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:17:42.794+01:00","@version":"1","message":"HOME PAGE REQUESTED","logger_name":"access","thread_name":"http-nio-8080-exec-2","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:17:44.396+01:00","@version":"1","message":"PROFILE PAGE REQUESTED user=alice@restaurant.com","logger_name":"access","thread_name":"http-nio-8080-exec-3","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:17:45.151+01:00","@version":"1","message":"HOME PAGE REQUESTED","logger_name":"access","thread_name":"http-nio-8080-exec-4","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:17:45.778+01:00","@version":"1","message":"LOGIN PAGE REQUESTED","logger_name":"access","thread_name":"http-nio-8080-exec-5","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:17:47.185+01:00","@version":"1","message":"PROFILE PAGE REQUESTED user=alice@restaurant.com","logger_name":"access","thread_name":"http-nio-8080-exec-6","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:17:48.963+01:00","@version":"1","message":"LOGOUT PAGE REQUESTED","logger_name":"access","thread_name":"http-nio-8080-exec-8","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:17:49.984+01:00","@version":"1","message":"HOME PAGE REQUESTED","logger_name":"access","thread_name":"http-nio-8080-exec-9","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:17:51.213+01:00","@version":"1","message":"LOGIN PAGE REQUESTED","logger_name":"access","thread_name":"http-nio-8080-exec-10","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:18:01.298+01:00","@version":"1","message":"LOGIN SUCCESS user=dr.martin@clinic.com ip=0:0:0:0:0:0:0:1","logger_name":"access","thread_name":"http-nio-8080-exec-2","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:18:01.303+01:00","@version":"1","message":"LIST APPOINTMENTS user=dr.martin@clinic.com","logger_name":"access","thread_name":"http-nio-8080-exec-3","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:18:08.885+01:00","@version":"1","message":"LOGIN PAGE REQUESTED","logger_name":"access","thread_name":"http-nio-8080-exec-4","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:18:15.341+01:00","@version":"1","message":"LOGIN SUCCESS user=meunier@garage.com ip=0:0:0:0:0:0:0:1","logger_name":"access","thread_name":"http-nio-8080-exec-5","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:18:15.346+01:00","@version":"1","message":"LIST APPOINTMENTS user=meunier@garage.com","logger_name":"access","thread_name":"http-nio-8080-exec-6","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:18:22.953+01:00","@version":"1","message":"LOGOUT PAGE REQUESTED","logger_name":"access","thread_name":"http-nio-8080-exec-8","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:18:24.316+01:00","@version":"1","message":"LOGIN PAGE REQUESTED","logger_name":"access","thread_name":"http-nio-8080-exec-9","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:23:01.963+01:00","@version":"1","message":"LOGIN SUCCESS user=alice@restaurant.com ip=0:0:0:0:0:0:0:1","logger_name":"access","thread_name":"http-nio-8080-exec-1","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:23:02.004+01:00","@version":"1","message":"LIST APPOINTMENTS user=alice@restaurant.com","logger_name":"access","thread_name":"http-nio-8080-exec-2","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:23:05.716+01:00","@version":"1","message":"LOGOUT PAGE REQUESTED","logger_name":"access","thread_name":"http-nio-8080-exec-4","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:23:06.692+01:00","@version":"1","message":"HOME PAGE REQUESTED","logger_name":"access","thread_name":"http-nio-8080-exec-5","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:23:07.743+01:00","@version":"1","message":"LOGIN PAGE REQUESTED","logger_name":"access","thread_name":"http-nio-8080-exec-6","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:23:17.991+01:00","@version":"1","message":"LOGIN SUCCESS user=dr.martin@clinic.com ip=0:0:0:0:0:0:0:1","logger_name":"access","thread_name":"http-nio-8080-exec-7","level":"INFO","level_value":20000}
+{"@timestamp":"2026-01-19T21:23:17.995+01:00","@version":"1","message":"LIST APPOINTMENTS user=dr.martin@clinic.com","logger_name":"access","thread_name":"http-nio-8080-exec-8","level":"INFO","level_value":20000}

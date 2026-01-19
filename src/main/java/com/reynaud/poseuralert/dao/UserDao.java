@@ -14,5 +14,7 @@ public interface UserDao extends JpaRepository<UserEntity, Long> {
     @Query("select user from UserEntity user where user.companyName=:companyName")
     UserEntity findByCompanyName(@Param("companyName") String companyName);
 
+    UserEntity findByUid(String uid);
+
     long countByRole(String role);
 }

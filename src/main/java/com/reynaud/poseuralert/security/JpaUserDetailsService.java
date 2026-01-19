@@ -2,6 +2,7 @@ package com.reynaud.poseuralert.security;
 
 import com.reynaud.poseuralert.dao.UserDao;
 import com.reynaud.poseuralert.model.UserEntity;
+import com.reynaud.poseuralert.util.logging.Loggers;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,27 +23,22 @@ public class JpaUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("=== JPA USER DETAILS SERVICE CALLED ===");
-        System.out.println("Looking for user: " + username);
-        System.out.println("Timestamp: " + System.currentTimeMillis());
+        Loggers.technical().debug("JPA USER DETAILS SERVICE CALLED username={}", username);
 
         UserEntity userEntity = userDao.findByEmail(username);
 
         if (userEntity == null) {
-            System.out.println("ERROR: User not found in database: " + username);
+            Loggers.access().warn("USER NOT FOUND username={}", username);
             throw new UsernameNotFoundException("User not found: " + username);
         }
 
-        System.out.println("User found: " + userEntity.getEmail());
-        System.out.println("Password hash starts with: " + userEntity.getPassword().substring(0, 10) + "...");
-        System.out.println("User sector: " + userEntity.getSector());
-        System.out.println("User role: " + userEntity.getRole());
-        System.out.println("PasswordEncoder class: " + passwordEncoder.getClass().getSimpleName());
+        Loggers.business().info("USER LOADED email={} sector={} role={}", userEntity.getEmail(), userEntity.getSector(), userEntity.getRole());
+        Loggers.diagnostic().debug("PasswordEncoder={} (hash suppressed)", passwordEncoder.getClass().getSimpleName());
 
         // Test de vérification du mot de passe avec un mot de passe connu pour le debug
         if ("testpassword".equals("testpassword")) {  // temporaire pour test
             boolean testMatch = passwordEncoder.matches("testpassword", userEntity.getPassword());
-            System.out.println("TEST: Password 'testpassword' matches hash: " + testMatch);
+            Loggers.diagnostic().debug("Password test match? {}", testMatch);
         }
 
         String role = userEntity.getRole() != null ? userEntity.getRole() : SpringSecurityConfig.ROLE_USER;
@@ -52,7 +48,7 @@ public class JpaUserDetailsService implements UserDetailsService {
             .roles(role)
             .build();
 
-        System.out.println("UserDetails created successfully for: " + userDetails.getUsername());
+        Loggers.technical().info("UserDetails created for {}", userDetails.getUsername());
         return userDetails;
     }
 }
