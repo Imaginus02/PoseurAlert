@@ -6,8 +6,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 
 @Entity
@@ -48,6 +48,9 @@ public class UserEntity implements UserDetails {
 
     @Column(name = "is_public_profile")
     private Boolean isPublicProfile = false;
+
+    @Column(nullable = false, name = "role")
+    private String role = SpringSecurityConfig.ROLE_USER;
 
     public UserEntity(String email, String password, String companyName, Sector sector) {
         this.email = email;
@@ -148,6 +151,14 @@ public class UserEntity implements UserDetails {
         this.isPublicProfile = isPublicProfile;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
@@ -170,10 +181,7 @@ public class UserEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Return the authorities/roles for the user
-        // For example, you might have a role called "ROLE_USER"
-        // You can use SimpleGrantedAuthority for simplicity
-        // You might have more complex logic based on your application's roles and permissions
-        return Arrays.asList(new SimpleGrantedAuthority(SpringSecurityConfig.ROLE_USER));
+        String effectiveRole = role != null ? role : SpringSecurityConfig.ROLE_USER;
+        return java.util.Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + effectiveRole));
     }
 }

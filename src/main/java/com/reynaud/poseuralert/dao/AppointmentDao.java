@@ -29,4 +29,8 @@ public interface AppointmentDao extends JpaRepository<AppointmentEntity, Long> {
     List<AppointmentEntity> findByProfessionalAndStatus(
             UserEntity professional,
             AppointmentStatus status);
+
+        long countByStatus(AppointmentStatus status);
+
+        long countByAppointmentDateAfter(LocalDateTime after);
 }

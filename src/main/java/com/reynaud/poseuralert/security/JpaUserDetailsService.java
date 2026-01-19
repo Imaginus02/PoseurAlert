@@ -36,6 +36,7 @@ public class JpaUserDetailsService implements UserDetailsService {
         System.out.println("User found: " + userEntity.getEmail());
         System.out.println("Password hash starts with: " + userEntity.getPassword().substring(0, 10) + "...");
         System.out.println("User sector: " + userEntity.getSector());
+        System.out.println("User role: " + userEntity.getRole());
         System.out.println("PasswordEncoder class: " + passwordEncoder.getClass().getSimpleName());
 
         // Test de vérification du mot de passe avec un mot de passe connu pour le debug
@@ -44,10 +45,12 @@ public class JpaUserDetailsService implements UserDetailsService {
             System.out.println("TEST: Password 'testpassword' matches hash: " + testMatch);
         }
 
+        String role = userEntity.getRole() != null ? userEntity.getRole() : SpringSecurityConfig.ROLE_USER;
+
         UserDetails userDetails = User.withUsername(userEntity.getEmail())
-                .password(userEntity.getPassword())
-                .roles(SpringSecurityConfig.ROLE_USER)
-                .build();
+            .password(userEntity.getPassword())
+            .roles(role)
+            .build();
 
         System.out.println("UserDetails created successfully for: " + userDetails.getUsername());
         return userDetails;

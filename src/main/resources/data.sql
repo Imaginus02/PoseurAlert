@@ -5,28 +5,31 @@
 -- =====================================================
 -- 1. USERS - Multiple professionals with different sectors
 -- =====================================================
-INSERT INTO sp_user (email, password, company_name, sector, address, phone_number, siret, description, business_hours, is_public_profile) VALUES
+INSERT INTO sp_user (email, password, role, company_name, sector, address, phone_number, siret, description, business_hours, is_public_profile) VALUES
+-- Admin
+('admin@poseuralert.com', '{noop}admin123', 'ADMIN', 'Poseur Alert HQ', 'RESTAURANT', '1 Rue de l''Administration, 75000 Paris', '0100000000', '00000000000000', 'Compte administrateur pour la supervision de la plateforme', 'Lun-Dim: 00h-23h', false),
+
 -- Restaurant
-('alice@restaurant.com', '{noop}password123', 'Le Petit Bistro', 'RESTAURANT', '123 Rue de Paris, 75001 Paris', '0123456789', '12345678901234', 'Bistro français traditionnel avec cuisine maison', 'Lun-Ven: 11h-23h, Sam-Dim: 12h-23h', true),
+('alice@restaurant.com', '{noop}password123', 'USER', 'Le Petit Bistro', 'RESTAURANT', '123 Rue de Paris, 75001 Paris', '0123456789', '12345678901234', 'Bistro français traditionnel avec cuisine maison', 'Lun-Ven: 11h-23h, Sam-Dim: 12h-23h', true),
 
 -- Health Professionals
-('dr.martin@clinic.com', '{noop}password123', 'Cabinet Dr. Martin', 'HEALTH_PROFESSIONAL', '456 Avenue des Champs, 75008 Paris', '0234567890', '23456789012345', 'Cabinet de médecine générale', 'Lun-Ven: 9h-18h, Sam: 9h-13h', true),
-('dentist@smile.com', '{noop}password123', 'Clinique du Sourire', 'HEALTH_PROFESSIONAL', '789 Boulevard St-Michel, 75005 Paris', '0345678901', '34567890123456', 'Clinique dentaire moderne avec équipements dernier cri', 'Lun-Ven: 8h-19h, Sam: 9h-14h', true),
+('dr.martin@clinic.com', '{noop}password123', 'USER', 'Cabinet Dr. Martin', 'HEALTH_PROFESSIONAL', '456 Avenue des Champs, 75008 Paris', '0234567890', '23456789012345', 'Cabinet de médecine générale', 'Lun-Ven: 9h-18h, Sam: 9h-13h', true),
+('dentist@smile.com', '{noop}password123', 'USER', 'Clinique du Sourire', 'HEALTH_PROFESSIONAL', '789 Boulevard St-Michel, 75005 Paris', '0345678901', '34567890123456', 'Clinique dentaire moderne avec équipements dernier cri', 'Lun-Ven: 8h-19h, Sam: 9h-14h', true),
 
 -- Garage
-('meunier@garage.com', '{noop}password123', 'Garage Meunier', 'GARAGE', '234 Route de Lyon, 69000 Lyon', '0456789012', '45678901234567', 'Garage automobile réparation et entretien', 'Lun-Ven: 8h-18h, Sam: 9h-12h', false),
+('meunier@garage.com', '{noop}password123', 'USER', 'Garage Meunier', 'GARAGE', '234 Route de Lyon, 69000 Lyon', '0456789012', '45678901234567', 'Garage automobile réparation et entretien', 'Lun-Ven: 8h-18h, Sam: 9h-12h', false),
 
 -- Hairdresser
-('coiffure@mode.com', '{noop}password123', 'Coiffure Mode', 'HAIRDRESSER', '567 Rue du Faubourg, 13000 Marseille', '0567890123', '56789012345678', 'Salon de coiffure mixte avec services de colorations', 'Lun: Fermé, Mar-Sam: 9h-18h, Dim: 10h-17h', true),
+('coiffure@mode.com', '{noop}password123', 'USER', 'Coiffure Mode', 'HAIRDRESSER', '567 Rue du Faubourg, 13000 Marseille', '0567890123', '56789012345678', 'Salon de coiffure mixte avec services de colorations', 'Lun: Fermé, Mar-Sam: 9h-18h, Dim: 10h-17h', true),
 
 -- Beauty Institute
-('beaute@institut.com', '{noop}password123', 'Institut de Beauté Luxe', 'BEAUTY_INSTITUTE', '890 Avenue Montaigne, 75008 Paris', '0678901234', '67890123456789', 'Institut de beauté haut de gamme: soins, manucure, massage', 'Lun-Dim: 10h-20h', true),
+('beaute@institut.com', '{noop}password123', 'USER', 'Institut de Beauté Luxe', 'BEAUTY_INSTITUTE', '890 Avenue Montaigne, 75008 Paris', '0678901234', '67890123456789', 'Institut de beauté haut de gamme: soins, manucure, massage', 'Lun-Dim: 10h-20h', true),
 
 -- Veterinarian
-('vet@animaux.com', '{noop}password123', 'Clinique Vétérinaire Léon', 'VETERINARIAN', '321 Boulevard de la Paix, 92100 Boulogne', '0789012345', '78901234567890', 'Clinique vétérinaire équipée avec urgences 24h/24', 'Lun-Ven: 9h-19h, Sam: 10h-13h, Dim: 15h-18h (urgences)', true),
+('vet@animaux.com', '{noop}password123', 'USER', 'Clinique Vétérinaire Léon', 'VETERINARIAN', '321 Boulevard de la Paix, 92100 Boulogne', '0789012345', '78901234567890', 'Clinique vétérinaire équipée avec urgences 24h/24', 'Lun-Ven: 9h-19h, Sam: 10h-13h, Dim: 15h-18h (urgences)', true),
 
 -- Additional test user for appointment testing
-('bob@salon.com', '{noop}password123', 'Salon Bob', 'HAIRDRESSER', '111 Rue Test, 75002 Paris', '0111111111', '99999999999999', 'Petit salon de quartier', 'Lun-Ven: 9h-18h', false);
+('bob@salon.com', '{noop}password123', 'USER', 'Salon Bob', 'HAIRDRESSER', '111 Rue Test, 75002 Paris', '0111111111', '99999999999999', 'Petit salon de quartier', 'Lun-Ven: 9h-18h', false);
 
 -- =====================================================
 -- 2. CLIENT PHONES - Tracked phone numbers

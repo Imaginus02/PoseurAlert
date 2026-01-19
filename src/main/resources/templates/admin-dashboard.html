@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>À POINT - Dashboard Admin</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <style>
+        :root {
+            --midnight: #0f172a;
+            --deep-blue: #0a4a6e;
+            --aqua: #1fb6ff;
+            --mint: #22c55e;
+            --amber: #f59e0b;
+            --sand: #f8fafc;
+            --card: #0b1b2c;
+            --stroke: rgba(255, 255, 255, 0.08);
+            --shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+        }
+
+        body {
+            font-family: 'Manrope', 'Space Grotesk', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(circle at 20% 20%, rgba(31, 182, 255, 0.14), transparent 25%),
+                        radial-gradient(circle at 80% 0%, rgba(34, 197, 94, 0.16), transparent 28%),
+                        radial-gradient(circle at 50% 80%, rgba(245, 158, 11, 0.12), transparent 26%),
+                        linear-gradient(135deg, #0b1727 0%, #08101d 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: rgba(11, 23, 39, 0.7);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--stroke);
+        }
+
+        .hero {
+            padding: 3rem 0 2rem;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', 'Manrope', sans-serif;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .hero p {
+            color: #cbd5e1;
+            max-width: 720px;
+        }
+
+        .panel {
+            background: linear-gradient(135deg, rgba(13, 28, 46, 0.9), rgba(10, 22, 37, 0.9));
+            border: 1px solid var(--stroke);
+            border-radius: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .panel-header {
+            border-bottom: 1px solid var(--stroke);
+            padding: 1.25rem 1.5rem;
+        }
+
+        .panel-body {
+            padding: 1.5rem;
+        }
+
+        .metric-card {
+            background: linear-gradient(145deg, rgba(26, 42, 64, 0.9), rgba(16, 33, 52, 0.9));
+            border: 1px solid var(--stroke);
+            border-radius: 14px;
+            padding: 1.25rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 30px rgba(0, 0, 0, 0.24);
+        }
+
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            font-size: 1.25rem;
+            color: #0b1727;
+            margin-bottom: 0.75rem;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #f8fafc;
+        }
+
+        .metric-label {
+            color: #cbd5e1;
+            margin-bottom: 0;
+        }
+
+        .table-dark {
+            --bs-table-bg: transparent;
+            --bs-table-striped-bg: rgba(255, 255, 255, 0.03);
+            --bs-table-striped-color: #e2e8f0;
+            border-color: var(--stroke);
+        }
+
+        .badge-soft {
+            padding: 0.4rem 0.75rem;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            letter-spacing: 0.01em;
+        }
+
+        .badge-flagged { background: rgba(255, 77, 109, 0.14); color: #f87171; border: 1px solid rgba(248, 113, 113, 0.35); }
+        .badge-clean { background: rgba(34, 197, 94, 0.14); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.35); }
+
+        .loading {
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        .grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        }
+
+        .pill {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid var(--stroke);
+            color: #e2e8f0;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .fade-up {
+            animation: fadeUp 0.6s ease forwards;
+            opacity: 0;
+            transform: translateY(8px);
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+<div th:replace="fragments/navbar :: navbar('admin')"></div>
+
+<main class="container py-4">
+    <section class="hero fade-up" style="animation-delay: 0.05s;">
+        <div class="d-flex flex-column flex-lg-row align-items-start align-items-lg-center justify-content-between gap-3">
+            <div>
+                <p class="pill mb-3">Accès réservé · Administrateur</p>
+                <h1 class="display-5 text-white mb-2">Tableau de bord</h1>
+                <p class="mb-0">Surveillez les indicateurs clés de la plateforme, les numéros signalés et l'activité globale en temps réel.</p>
+            </div>
+            <div class="text-lg-end">
+                <div class="badge-soft badge-flagged">Connecté : <span th:text="${adminEmail}">admin@poseuralert.com</span></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="panel fade-up" style="animation-delay: 0.1s;">
+        <div class="panel-body">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div>
+                    <h5 class="mb-1 text-white">Indicateurs</h5>
+                    <small class="text-secondary">Données actualisées via l'API admin</small>
+                </div>
+                <button class="btn btn-outline-light btn-sm" id="refreshMetrics">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Rafraîchir
+                </button>
+            </div>
+            <div class="grid" id="metricsGrid">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #22c55e, #15803d);">
+                        <i class="bi bi-people"></i>
+                    </div>
+                    <div class="metric-value" data-metric="totalUsers">--</div>
+                    <p class="metric-label">Utilisateurs</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #38bdf8, #0ea5e9);">
+                        <i class="bi bi-shield-lock"></i>
+                    </div>
+                    <div class="metric-value" data-metric="totalAdmins">--</div>
+                    <p class="metric-label">Admins</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">
+                        <i class="bi bi-journal-text"></i>
+                    </div>
+                    <div class="metric-value" data-metric="totalAppointments">--</div>
+                    <p class="metric-label">Rendez-vous</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #f87171, #ef4444);">
+                        <i class="bi bi-flag"></i>
+                    </div>
+                    <div class="metric-value" data-metric="flaggedNumbers">--</div>
+                    <p class="metric-label">Numéros signalés</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #fb7185, #e11d48);">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                    <div class="metric-value" data-metric="totalReports">--</div>
+                    <p class="metric-label">Signalements</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #14b8a6, #0f766e);">
+                        <i class="bi bi-calendar-event"></i>
+                    </div>
+                    <div class="metric-value" data-metric="upcomingAppointments">--</div>
+                    <p class="metric-label">Prochains rendez-vous</p>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon" style="background: linear-gradient(135deg, #f97316, #ea580c);">
+                        <i class="bi bi-emoji-frown"></i>
+                    </div>
+                    <div class="metric-value" data-metric="noShowAppointments">--</div>
+                    <p class="metric-label">No-shows</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="panel mt-4 fade-up" style="animation-delay: 0.15s;">
+        <div class="panel-header d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <div>
+                <h5 class="mb-1 text-white">Numéros signalés</h5>
+                <small class="text-secondary">Triés par nombre de signalements et fraîcheur</small>
+            </div>
+            <span class="pill" id="flaggedCount">-- numéros surveillés</span>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-dark table-striped align-middle mb-0" id="flaggedTable">
+                    <thead>
+                        <tr>
+                            <th scope="col">Numéro</th>
+                            <th scope="col">Signalements</th>
+                            <th scope="col">Dernier signalement</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="flaggedLoadingRow">
+                            <td colspan="3" class="loading">Chargement des numéros signalés...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="alert alert-warning mt-3 d-none" id="flaggedEmpty">Aucun numéro n'est actuellement marqué comme problématique.</div>
+            <div class="alert alert-danger mt-3 d-none" id="flaggedError">Impossible de récupérer les numéros signalés. Réessayez plus tard.</div>
+        </div>
+    </section>
+</main>
+
+<script>
+    const metricsEndpoint = '/api/admin/metrics';
+    const flaggedEndpoint = '/api/admin/flagged-numbers';
+
+    async function fetchJson(url) {
+        const response = await fetch(url, { credentials: 'same-origin' });
+        if (!response.ok) {
+            throw new Error('HTTP ' + response.status);
+        }
+        return response.json();
+    }
+
+    function renderMetrics(metrics) {
+        const mapping = {
+            totalUsers: metrics.totalUsers,
+            totalAdmins: metrics.totalAdmins,
+            totalAppointments: metrics.totalAppointments,
+            totalReports: metrics.totalReports,
+            flaggedNumbers: metrics.flaggedNumbers,
+            upcomingAppointments: metrics.upcomingAppointments,
+            noShowAppointments: metrics.noShowAppointments
+        };
+
+        Object.entries(mapping).forEach(([key, value]) => {
+            const el = document.querySelector(`[data-metric="${key}"]`);
+            if (el) {
+                el.textContent = value;
+            }
+        });
+    }
+
+    function renderFlaggedNumbers(numbers) {
+        const tbody = document.querySelector('#flaggedTable tbody');
+        const loadingRow = document.getElementById('flaggedLoadingRow');
+        const emptyAlert = document.getElementById('flaggedEmpty');
+        const errorAlert = document.getElementById('flaggedError');
+
+        if (loadingRow) loadingRow.remove();
+        emptyAlert.classList.add('d-none');
+        errorAlert.classList.add('d-none');
+
+        if (!numbers.length) {
+            emptyAlert.classList.remove('d-none');
+            document.getElementById('flaggedCount').textContent = '0 numéro surveillé';
+            return;
+        }
+
+        document.getElementById('flaggedCount').textContent = `${numbers.length} numéro${numbers.length > 1 ? 's' : ''} surveillé${numbers.length > 1 ? 's' : ''}`;
+
+        numbers.forEach(item => {
+            const tr = document.createElement('tr');
+
+            const phoneTd = document.createElement('td');
+            phoneTd.textContent = item.phoneNumber;
+            tr.appendChild(phoneTd);
+
+            const countTd = document.createElement('td');
+            const badge = document.createElement('span');
+            badge.className = 'badge-soft badge-flagged';
+            badge.textContent = `${item.reportCount} signalement${item.reportCount > 1 ? 's' : ''}`;
+            countTd.appendChild(badge);
+            tr.appendChild(countTd);
+
+            const lastReportTd = document.createElement('td');
+            lastReportTd.textContent = item.lastReportDate || '-';
+            tr.appendChild(lastReportTd);
+
+            tbody.appendChild(tr);
+        });
+    }
+
+    async function loadDashboard() {
+        const loadingRow = document.getElementById('flaggedLoadingRow');
+        if (loadingRow) {
+            loadingRow.classList.remove('d-none');
+        }
+
+        try {
+            const [metrics, flagged] = await Promise.all([
+                fetchJson(metricsEndpoint),
+                fetchJson(flaggedEndpoint)
+            ]);
+            renderMetrics(metrics);
+            renderFlaggedNumbers(flagged);
+        } catch (e) {
+            console.error('Dashboard fetch error', e);
+            const errorAlert = document.getElementById('flaggedError');
+            const loading = document.getElementById('flaggedLoadingRow');
+            if (loading) loading.remove();
+            if (errorAlert) errorAlert.classList.remove('d-none');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadDashboard();
+        const refreshBtn = document.getElementById('refreshMetrics');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', () => loadDashboard());
+        }
+    });
+</script>
+</body>
+</html>

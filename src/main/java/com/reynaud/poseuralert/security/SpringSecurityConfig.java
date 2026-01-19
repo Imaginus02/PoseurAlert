@@ -55,25 +55,26 @@ public class SpringSecurityConfig {// extends WebSecurityConfiguration {
         System.out.println("=== BUILDING SPRING SECURITY FILTER CHAIN ===");
 
         http.authorizeHttpRequests((requests) -> requests
-                        .antMatchers("/").permitAll()
-                        .antMatchers("/login").permitAll()
-                        .antMatchers("/login.html").permitAll()
-                        .antMatchers("/login?error=true").permitAll()
-                        .antMatchers("/logout").permitAll()
-                        .antMatchers("/console/**").permitAll()
-                        .antMatchers("/api/**").authenticated()
-                        .antMatchers("/api/sessions/**").permitAll()
-                        .antMatchers("/assets/**").permitAll()
-                        .antMatchers("/static/**").permitAll()
-                        .antMatchers("/inscription").permitAll()
-                        .antMatchers("/profil/public/**").permitAll()
-                        .antMatchers("/rendez-vous/public/**").permitAll()
-                        .antMatchers( "/favicon.ico").permitAll()
-                        .anyRequest().authenticated()
+                .antMatchers("/console/**").permitAll()
+                .antMatchers("/api/sessions/**").permitAll()
+                .antMatchers("/api/admin/**").hasRole(ROLE_ADMIN)
+                .antMatchers("/admin/**").hasRole(ROLE_ADMIN)
+                .antMatchers("/api/**").authenticated()
+                .antMatchers("/").permitAll()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/login.html").permitAll()
+                .antMatchers("/login?error=true").permitAll()
+                .antMatchers("/logout").permitAll()
+                .antMatchers("/assets/**").permitAll()
+                .antMatchers("/static/**").permitAll()
+                .antMatchers("/inscription").permitAll()
+                .antMatchers("/profil/public/**").permitAll()
+                .antMatchers("/rendez-vous/public/**").permitAll()
+                .antMatchers( "/favicon.ico").permitAll()
+                .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
-                        .defaultSuccessUrl("/rendez-vous", true)
                         .loginProcessingUrl("/login/processing")
                         .permitAll()
                         .passwordParameter("password")
@@ -82,7 +83,9 @@ public class SpringSecurityConfig {// extends WebSecurityConfiguration {
                         .successHandler((request, response, authentication) -> {
                             System.out.println("=== LOGIN SUCCESS ===");
                             System.out.println("User: " + authentication.getName());
-                            response.sendRedirect("/rendez-vous");
+                    boolean isAdmin = authentication.getAuthorities().stream()
+                        .anyMatch(auth -> auth.getAuthority().equals("ROLE_" + ROLE_ADMIN));
+                    response.sendRedirect(isAdmin ? "/admin" : "/rendez-vous");
                         })
                         .failureHandler((request, response, exception) -> {
                             System.out.println("=== LOGIN FAILURE ===");

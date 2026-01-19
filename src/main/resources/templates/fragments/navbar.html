@@ -11,6 +11,13 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
+                <li class="nav-item" sec:authorize="hasAuthority('ROLE_ADMIN')">
+                    <a class="nav-link"
+                       th:classappend="${activePage == 'admin' ? 'active' : ''}"
+                       href="/admin" th:href="@{/admin}">
+                        <i class="bi bi-speedometer2"></i> Admin
+                    </a>
+                </li>
                 <li class="nav-item" sec:authorize="isAuthenticated()">
                     <a class="nav-link" 
                        th:classappend="${activePage == 'appointments' ? 'active' : ''}"
